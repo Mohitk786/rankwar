@@ -1,0 +1,193 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ListingType {
+  WEBSITE
+  X_HANDLE
+}
+
+enum ListingStatus {
+  ACTIVE
+  UNDER_REVIEW
+  REMOVED
+}
+
+enum CheckoutStatus {
+  INITIATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  EXPIRED
+}
+
+enum PaymentEventStatus {
+  RECEIVED
+  VERIFIED
+  APPLIED
+  DUPLICATE_IGNORED
+  REJECTED
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  description String?
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
+  listings  Listing[]
+  subscribers NewsletterSubscriber[]
+
+  @@index([slug])
+}
+
+model Listing {
+  id                String        @id @default(cuid())
+  type              ListingType
+  normalizedKey     String        @unique
+  slug              String        @unique
+  destinationUrl    String
+  displayName       String
+  description       String?
+  imageUrl          String?
+  faviconUrl        String?
+  categoryId        String
+  category          Category      @relation(fields: [categoryId], references: [id])
+  currentAmount     Int           @default(0)
+  status            ListingStatus @default(ACTIVE)
+  raiseCount        Int           @default(0)
+  firstPaidAt       DateTime
+  lastPaidAt        DateTime
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  bids              Bid[]
+  clicks            Click[]
+  dailyEntries      DailyLeaderboardEntry[]
+  moderationFlags   ModerationFlag[]
+
+  @@index([categoryId, currentAmount])
+  @@index([currentAmount])
+  @@index([status])
+}
+
+model Bid {
+  id                  String    @id @default(cuid())
+  listingId           String
+  listing             Listing   @relation(fields: [listingId], references: [id])
+  amount              Int
+  resultingTotal      Int
+  checkoutId          String    @unique
+  checkout            Checkout  @relation(fields: [checkoutId], references: [id])
+  createdAt           DateTime  @default(now())
+
+  @@index([listingId, createdAt])
+  @@index([createdAt])
+}
+
+model Checkout {
+  id                     String          @id @default(cuid())
+  stripeSessionId        String          @unique
+  stripePaymentIntentId  String?         @unique
+  visitorId              String?
+  listingType            ListingType
+  targetListingKey       String
+  targetDestinationUrl   String
+  targetDisplayName      String
+  targetDescription      String?
+  targetImageUrl         String?
+  targetFaviconUrl       String?
+  targetCategoryId       String
+  targetAmount           Int
+  deltaAmount            Int
+  status                 CheckoutStatus  @default(INITIATED)
+  tosAgreedAt            DateTime
+  createdAt              DateTime        @default(now())
+  expiresAt              DateTime
+  bid                    Bid?
+
+  @@index([stripeSessionId])
+  @@index([status, expiresAt])
+}
+
+model PaymentEvent {
+  id              String              @id @default(cuid())
+  provider        String              @default("stripe")
+  eventId         String              @unique
+  eventType       String
+  rawPayload      Json
+  status          PaymentEventStatus  @default(RECEIVED)
+  receivedAt      DateTime            @default(now())
+  processedAt     DateTime?
+  error           String?
+
+  @@index([status])
+}
+
+model Click {
+  id            String   @id @default(cuid())
+  listingId     String
+  listing       Listing  @relation(fields: [listingId], references: [id])
+  visitorId     String?
+  ipHash        String
+  userAgent     String?
+  referrer      String?
+  isCounted     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@index([listingId, createdAt])
+  @@index([listingId, visitorId, createdAt])
+  @@index([ipHash, createdAt])
+}
+
+model DailyLeaderboardEntry {
+  id            String   @id @default(cuid())
+  listingId     String
+  listing       Listing  @relation(fields: [listingId], references: [id])
+  utcDate       DateTime @db.Date
+  amount        Int
+  rank          Int
+  isFrozen      Boolean  @default(false)
+
+  @@unique([listingId, utcDate])
+  @@index([utcDate, rank])
+}
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  frequency      String
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  confirmToken   String    @unique
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([email])
+}
+
+model ModerationFlag {
+  id            String    @id @default(cuid())
+  listingId     String
+  listing       Listing   @relation(fields: [listingId], references: [id])
+  reason        String
+  reporterEmail String?
+  createdAt     DateTime  @default(now())
+  resolvedAt    DateTime?
+
+  @@index([listingId])
+  @@index([resolvedAt])
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
