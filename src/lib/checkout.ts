@@ -5,6 +5,7 @@ import { getStripe } from "./stripe";
 import { normalizeSubmission, SubmissionValidationError } from "./normalize-url";
 import { getPricingContext, validateTargetAmount, PricingError } from "./pricing";
 import { resolveMetadata } from "./metadata";
+import { getSiteUrl } from "./site-url";
 
 export const CheckoutRequestSchema = z.object({
   input: z.string().trim().min(1).max(500),
@@ -80,7 +81,7 @@ export async function createCheckoutSession(input: CheckoutRequest, visitorId: s
     },
   });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   try {
     const stripe = getStripe();

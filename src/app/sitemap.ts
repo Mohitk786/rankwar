@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 import { getDailyDates } from "@/lib/ranking";
+import { getSiteUrl } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   const [categories, listings, dailyDates] = await Promise.all([
     db.category.findMany({ select: { slug: true } }),

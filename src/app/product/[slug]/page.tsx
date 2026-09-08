@@ -6,6 +6,7 @@ import { formatCount, formatRelativeTime, formatUsd } from "@/lib/format";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { CategoryTag } from "@/components/CategoryTag";
 import { db } from "@/lib/db";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -41,7 +42,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     clickCount,
   });
 
-  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/product/${listing.slug}`;
+  const shareUrl = `${getSiteUrl()}/product/${listing.slug}`;
   const isTopSpot = rankContext.overallRank === 1;
 
   return (
