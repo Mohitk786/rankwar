@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
-import { ArrowUpRight, Award, MousePointerClick, RotateCw, Trophy } from "lucide-react";
-import { getListingBySlug, getRankContext } from "@/lib/ranking";
+import { ArrowUpRight, Award, MousePointerClick, RotateCw, TrendingUp, Trophy } from "lucide-react";
+import { getLadder, getListingBySlug, getRankContext, getRankEvents } from "@/lib/ranking";
 import { generateListingFaq } from "@/lib/seo-copy";
 import { formatCount, formatRelativeTime, formatUsd } from "@/lib/format";
 import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { CategoryTag } from "@/components/CategoryTag";
+import { WatchButton } from "@/components/WatchButton";
+import { RankActivityFeed } from "@/components/RankActivityFeed";
 import { db } from "@/lib/db";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -12,10 +14,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const listing = await getListingBySlug(slug);
   if (!listing) return { title: "Listing not found" };
+  const rank = await getRankContext(listing);
   return {
-    title: `${listing.displayName} · #${listing.raiseCount > 0 ? "raised" : "new"} on RankWar`,
-    description: listing.description ?? `${listing.displayName} on the RankWar leaderboard.`,
-    openGraph: listing.imageUrl ? { images: [listing.imageUrl] } : undefined,
+    title: `${listing.displayName} · #${rank.overallRank} on RankWar`,
+    description: listing.description ?? `${listing.displayName} — #${rank.overallRank} overall on the RankWar leaderboard.`,
+    // opengraph-image.tsx (file convention, same route segment) supplies the share image.
   };
 }
 
@@ -24,10 +27,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const listing = await getListingBySlug(slug);
   if (!listing || listing.status === "REMOVED") notFound();
 
-  const [rankContext, clickCount] = await Promise.all([
+  const [rankContext, clickCount, ladder, rankEvents] = await Promise.all([
     getRankContext(listing),
     db.click.count({ where: { listingId: listing.id, isCounted: true } }),
+    getLadder(listing),
+    getRankEvents(listing.id),
   ]);
+
+  const raiseInput = listing.type === "X_HANDLE" ? listing.normalizedKey : listing.destinationUrl;
 
   const faq = generateListingFaq({
     displayName: listing.displayName,
@@ -81,7 +88,56 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <ArrowUpRight className="h-4 w-4" />
           </a>
           <CopyLinkButton url={shareUrl} />
+          <a
+            href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
+            className="flex items-center gap-1.5 rounded-md border border-accent/50 px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
+          >
+            <TrendingUp className="h-4 w-4" />
+            Raise your rank
+          </a>
+          <WatchButton slug={listing.slug} />
         </div>
+      </div>
+
+      <RankActivityFeed events={rankEvents} />
+
+      <div className="mb-6 rounded-xl border border-border p-4">
+        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted">
+          <TrendingUp className="h-3.5 w-3.5" /> What it costs to move up
+        </h2>
+        {ladder.isTop ? (
+          <p className="flex items-center gap-2 text-sm">
+            <Trophy className="h-4 w-4 shrink-0 text-accent" />
+            <span>
+              <strong>{listing.displayName}</strong> is #1 overall right now — nothing to beat.
+            </span>
+          </p>
+        ) : (
+          <div className="space-y-2 text-sm">
+            {ladder.nextUp ? (
+              <p>
+                Beat <strong>{ladder.nextUp.name}</strong> for{" "}
+                <a
+                  href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
+                  className="font-mono font-bold text-accent underline decoration-dotted underline-offset-2"
+                >
+                  {formatUsd(ladder.nextUp.priceToBeat)}
+                </a>
+              </p>
+            ) : null}
+            {ladder.topOverall ? (
+              <p>
+                Take #1 overall (<strong>{ladder.topOverall.name}</strong>) for{" "}
+                <a
+                  href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
+                  className="font-mono font-bold text-accent underline decoration-dotted underline-offset-2"
+                >
+                  {formatUsd(ladder.topOverall.priceToBeat)}
+                </a>
+              </p>
+            ) : null}
+          </div>
+        )}
       </div>
 
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">

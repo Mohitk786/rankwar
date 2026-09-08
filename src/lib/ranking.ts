@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { TAKE_FIRST_PLACE_MARGIN } from "./pricing";
 
 const PAGE_SIZE = 100;
 
@@ -117,6 +118,50 @@ export async function getRankContext(listing: {
   };
 }
 
+/**
+ * The competitive ladder for a listing: who's directly above it (the
+ * cheapest way to move up one spot) and what the true #1 currently costs
+ * (the aspirational number) — answers "what would it cost me to move up?"
+ * without the visitor doing any arithmetic themselves.
+ */
+export async function getLadder(listing: {
+  id: string;
+  currentAmount: number;
+  firstPaidAt: Date;
+  categoryId: string;
+}) {
+  const isAhead = {
+    OR: [
+      { currentAmount: { gt: listing.currentAmount } },
+      { currentAmount: listing.currentAmount, firstPaidAt: { lt: listing.firstPaidAt } },
+    ],
+  };
+
+  const [nextOverall, topOverall] = await Promise.all([
+    db.listing.findFirst({
+      where: { status: "ACTIVE", id: { not: listing.id }, ...isAhead },
+      orderBy: [{ currentAmount: "asc" }],
+      select: { displayName: true, currentAmount: true },
+    }),
+    db.listing.findFirst({
+      where: { status: "ACTIVE" },
+      orderBy: [{ currentAmount: "desc" }, { firstPaidAt: "asc" }],
+      select: { displayName: true, currentAmount: true },
+    }),
+  ]);
+
+  const isTop = !nextOverall;
+
+  return {
+    isTop,
+    nextUp: nextOverall ? { name: nextOverall.displayName, priceToBeat: nextOverall.currentAmount + 1 } : null,
+    topOverall:
+      !isTop && topOverall
+        ? { name: topOverall.displayName, priceToBeat: topOverall.currentAmount + TAKE_FIRST_PLACE_MARGIN }
+        : null,
+  };
+}
+
 export async function getAllCategoriesWithTop3() {
   const categories = await db.category.findMany({ orderBy: { sortOrder: "asc" } });
   return Promise.all(
@@ -182,6 +227,51 @@ export async function getLiveActivityPulse() {
     db.bid.count({ where: { createdAt: { gte: since } } }),
   ]);
   return { clicksLast24h, paymentsLast24h };
+}
+
+/** Recent "you got overtaken" events for a single listing — the raw feed behind the product-page activity log and the watchlist API. */
+export async function getRankEvents(listingId: string, limit = 5) {
+  return db.rankEvent.findMany({
+    where: { listingId },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+}
+
+/**
+ * Batch status lookup for a set of listing slugs — powers the client-side
+ * watchlist (localStorage holds the slugs, this resolves their live state)
+ * without needing accounts or a server-side "watch" table.
+ */
+export async function getWatchlistStatus(slugs: string[]) {
+  if (slugs.length === 0) return [];
+  const listings = await db.listing.findMany({
+    where: { slug: { in: slugs } },
+    include: { category: categorySelect },
+  });
+
+  return Promise.all(
+    listings.map(async (listing) => {
+      const [rank, latestEvent] = await Promise.all([
+        getRankContext(listing),
+        db.rankEvent.findFirst({ where: { listingId: listing.id }, orderBy: { createdAt: "desc" } }),
+      ]);
+      return {
+        slug: listing.slug,
+        displayName: listing.displayName,
+        currentAmount: listing.currentAmount,
+        status: listing.status,
+        categoryName: listing.category.name,
+        overallRank: rank.overallRank,
+        overallTotal: rank.overallTotal,
+        categoryRank: rank.categoryRank,
+        categoryTotal: rank.categoryTotal,
+        latestEvent: latestEvent
+          ? { overtakenByDisplayName: latestEvent.overtakenByDisplayName, scope: latestEvent.scope, createdAt: latestEvent.createdAt }
+          : null,
+      };
+    })
+  );
 }
 
 export async function getSiteStats() {

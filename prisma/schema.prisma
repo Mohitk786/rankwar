@@ -70,10 +70,36 @@ model Listing {
   clicks            Click[]
   dailyEntries      DailyLeaderboardEntry[]
   moderationFlags   ModerationFlag[]
+  rankEvents        RankEvent[]
 
   @@index([categoryId, currentAmount])
   @@index([currentAmount])
   @@index([status])
+}
+
+enum RankEventScope {
+  OVERALL
+  CATEGORY
+}
+
+/**
+ * An append-only log of "you got overtaken" moments: written whenever a
+ * payment raises one listing's amount past another active listing's
+ * amount. Purely additive/derived from Bid data — never affects ranking
+ * itself, only powers the retention/activity surfaces (product page
+ * history, watchlist) that tell a payer they've been passed.
+ */
+model RankEvent {
+  id                     String         @id @default(cuid())
+  listingId              String
+  listing                Listing        @relation(fields: [listingId], references: [id])
+  scope                  RankEventScope
+  categoryName           String?
+  overtakenByDisplayName String
+  overtakenBySlug        String
+  createdAt              DateTime       @default(now())
+
+  @@index([listingId, createdAt])
 }
 
 model Bid {

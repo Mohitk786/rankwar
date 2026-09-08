@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, Info, LayoutGrid, ScrollText, TrendingUp } from "lucide-react";
+import { Bell, CalendarDays, Info, LayoutGrid, ScrollText, TrendingUp } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { getLiveActivityPulse } from "@/lib/ranking";
 import { formatCount } from "@/lib/format";
@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "/today", label: "Today", icon: TrendingUp },
   { href: "/daily", label: "Daily", icon: CalendarDays },
   { href: "/categories", label: "Categories", icon: LayoutGrid },
+  { href: "/watchlist", label: "Watchlist", icon: Bell },
   { href: "/about", label: "About", icon: Info },
   { href: "/rules", label: "Rules", icon: ScrollText },
 ];

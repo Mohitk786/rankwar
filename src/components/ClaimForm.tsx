@@ -13,15 +13,17 @@ export function ClaimForm({
   lockCategory = false,
   suggestedAmount,
   currentTopAmount,
+  defaultInput = "",
 }: {
   categories: Category[];
   defaultCategorySlug?: string;
   lockCategory?: boolean;
   suggestedAmount: number;
   currentTopAmount: number;
+  defaultInput?: string;
 }) {
   const [step, setStep] = useState<"form" | "confirm">("form");
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(defaultInput);
   const [categorySlug, setCategorySlug] = useState(defaultCategorySlug ?? categories[0]?.slug ?? "");
   const [amount, setAmount] = useState(suggestedAmount);
   const [tosAgreed, setTosAgreed] = useState(false);

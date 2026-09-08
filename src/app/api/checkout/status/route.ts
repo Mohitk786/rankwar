@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getRankContext } from "@/lib/ranking";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -12,9 +13,22 @@ export async function GET(request: Request) {
   if (checkout.status === "SUCCEEDED") {
     const listing = await db.listing.findUnique({
       where: { normalizedKey: checkout.targetListingKey },
-      select: { slug: true },
+      include: { category: { select: { name: true } } },
     });
-    return NextResponse.json({ status: "SUCCEEDED", listingSlug: listing?.slug ?? null });
+    if (!listing) return NextResponse.json({ status: "SUCCEEDED", listingSlug: null });
+
+    const rank = await getRankContext(listing);
+    return NextResponse.json({
+      status: "SUCCEEDED",
+      listingSlug: listing.slug,
+      displayName: listing.displayName,
+      categoryName: listing.category.name,
+      amount: listing.currentAmount,
+      overallRank: rank.overallRank,
+      overallTotal: rank.overallTotal,
+      categoryRank: rank.categoryRank,
+      categoryTotal: rank.categoryTotal,
+    });
   }
 
   return NextResponse.json({ status: checkout.status });

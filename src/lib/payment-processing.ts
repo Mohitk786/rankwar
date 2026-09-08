@@ -1,6 +1,60 @@
 import type Stripe from "stripe";
+import type { Prisma } from "@prisma/client";
 import { db } from "./db";
 import { uniqueSlugFor } from "./slugify";
+
+/**
+ * Whenever a payment raises a listing's amount past other active listings,
+ * those listings just got overtaken — record it so the product page and
+ * watchlist can surface "you were passed" without anyone needing to notice
+ * on their own. Amount-only comparison (never rank numbers): cheap, and the
+ * exact rank at the moment doesn't matter — only the fact of being passed does.
+ */
+async function recordOvertakenEvents(
+  tx: Prisma.TransactionClient,
+  raiser: { id: string; displayName: string; slug: string; categoryId: string },
+  oldAmount: number,
+  newAmount: number
+) {
+  if (newAmount <= oldAmount) return;
+
+  const [overallAffected, categoryAffected, category] = await Promise.all([
+    tx.listing.findMany({
+      where: { id: { not: raiser.id }, status: "ACTIVE", currentAmount: { gte: oldAmount, lt: newAmount } },
+      select: { id: true },
+    }),
+    tx.listing.findMany({
+      where: {
+        id: { not: raiser.id },
+        status: "ACTIVE",
+        categoryId: raiser.categoryId,
+        currentAmount: { gte: oldAmount, lt: newAmount },
+      },
+      select: { id: true },
+    }),
+    tx.category.findUnique({ where: { id: raiser.categoryId }, select: { name: true } }),
+  ]);
+
+  const events: Prisma.RankEventCreateManyInput[] = [
+    ...overallAffected.map((l) => ({
+      listingId: l.id,
+      scope: "OVERALL" as const,
+      overtakenByDisplayName: raiser.displayName,
+      overtakenBySlug: raiser.slug,
+    })),
+    ...categoryAffected.map((l) => ({
+      listingId: l.id,
+      scope: "CATEGORY" as const,
+      categoryName: category?.name ?? null,
+      overtakenByDisplayName: raiser.displayName,
+      overtakenBySlug: raiser.slug,
+    })),
+  ];
+
+  if (events.length > 0) {
+    await tx.rankEvent.createMany({ data: events });
+  }
+}
 
 /**
  * Applies a confirmed Stripe Checkout Session to the board: creates the
@@ -29,9 +83,14 @@ export async function applySucceededCheckoutSession(session: Stripe.Checkout.Ses
   await db.$transaction(async (tx) => {
     const existing = await tx.listing.findUnique({ where: { normalizedKey: checkout.targetListingKey } });
     let listingId: string;
+    let listingSlug: string;
+    let listingDisplayName: string;
+    let categoryId: string;
     let resultingTotal: number;
+    let oldAmount: number;
 
     if (existing) {
+      oldAmount = existing.currentAmount;
       const updated = await tx.listing.update({
         where: { id: existing.id },
         data: {
@@ -41,8 +100,12 @@ export async function applySucceededCheckoutSession(session: Stripe.Checkout.Ses
         },
       });
       listingId = updated.id;
+      listingSlug = updated.slug;
+      listingDisplayName = updated.displayName;
+      categoryId = updated.categoryId;
       resultingTotal = updated.currentAmount;
     } else {
+      oldAmount = 0;
       const slug = await uniqueSlugFor(checkout.targetDisplayName, tx);
       const now = new Date();
       const created = await tx.listing.create({
@@ -63,6 +126,9 @@ export async function applySucceededCheckoutSession(session: Stripe.Checkout.Ses
         },
       });
       listingId = created.id;
+      listingSlug = created.slug;
+      listingDisplayName = created.displayName;
+      categoryId = created.categoryId;
       resultingTotal = created.currentAmount;
     }
 
@@ -75,6 +141,13 @@ export async function applySucceededCheckoutSession(session: Stripe.Checkout.Ses
         createdAt: new Date(),
       },
     });
+
+    await recordOvertakenEvents(
+      tx,
+      { id: listingId, displayName: listingDisplayName, slug: listingSlug, categoryId },
+      oldAmount,
+      resultingTotal
+    );
 
     await tx.checkout.update({
       where: { id: checkout.id },
