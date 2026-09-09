@@ -1,6 +1,6 @@
 import { db } from "./db";
 
-export const MIN_NEW_LISTING_AMOUNT = 10;
+export const MIN_NEW_LISTING_AMOUNT = 5;
 export const MIN_RAISE_INCREMENT = 1;
 export const TAKE_FIRST_PLACE_MARGIN = 5;
 export const MAX_AMOUNT = 999_999;
@@ -17,10 +17,14 @@ export type PricingContext = {
  * current #1's amount (0 if the board is empty) plus, if a listing with
  * this key already exists, its current amount — used to compute both the
  * "minimum to take #1" and "minimum to raise your own listing" rules.
+ *
+ * A REMOVED listing is excluded here on purpose: resubmitting its URL is
+ * treated as a brand-new listing (fresh minimum, fresh metadata) rather
+ * than requiring a raise past whatever amount it held before removal.
  */
 export async function getPricingContext(normalizedKey: string): Promise<PricingContext> {
   const [existing, top] = await Promise.all([
-    db.listing.findUnique({ where: { normalizedKey }, select: { currentAmount: true } }),
+    db.listing.findFirst({ where: { normalizedKey, status: { not: "REMOVED" } }, select: { currentAmount: true } }),
     db.listing.findFirst({
       where: { status: "ACTIVE" },
       orderBy: [{ currentAmount: "desc" }, { firstPaidAt: "asc" }],

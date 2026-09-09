@@ -83,6 +83,11 @@ export async function applySucceededCheckoutSession({
 
   await db.$transaction(async (tx) => {
     const existing = await tx.listing.findUnique({ where: { normalizedKey: checkout.targetListingKey } });
+    // A REMOVED listing is priced as brand-new (see getPricingContext), so
+    // it's applied the same way here: reset in place with fresh metadata
+    // rather than incremented — normalizedKey is unique, so this reuses the
+    // row instead of creating a second one for the same URL.
+    const raisingExisting = existing !== null && existing.status !== "REMOVED";
     let listingId: string;
     let listingSlug: string;
     let listingDisplayName: string;
@@ -90,7 +95,7 @@ export async function applySucceededCheckoutSession({
     let resultingTotal: number;
     let oldAmount: number;
 
-    if (existing) {
+    if (raisingExisting && existing) {
       oldAmount = existing.currentAmount;
       const updated = await tx.listing.update({
         where: { id: existing.id },
@@ -109,28 +114,29 @@ export async function applySucceededCheckoutSession({
       oldAmount = 0;
       const slug = await uniqueSlugFor(checkout.targetDisplayName, tx);
       const now = new Date();
-      const created = await tx.listing.create({
-        data: {
-          type: checkout.listingType,
-          normalizedKey: checkout.targetListingKey,
-          slug,
-          destinationUrl: checkout.targetDestinationUrl,
-          displayName: checkout.targetDisplayName,
-          description: checkout.targetDescription,
-          imageUrl: checkout.targetImageUrl,
-          faviconUrl: checkout.targetFaviconUrl,
-          categoryId: checkout.targetCategoryId,
-          currentAmount: checkout.deltaAmount,
-          raiseCount: 0,
-          firstPaidAt: now,
-          lastPaidAt: now,
-        },
-      });
-      listingId = created.id;
-      listingSlug = created.slug;
-      listingDisplayName = created.displayName;
-      categoryId = created.categoryId;
-      resultingTotal = created.currentAmount;
+      const freshData = {
+        type: checkout.listingType,
+        slug,
+        destinationUrl: checkout.targetDestinationUrl,
+        displayName: checkout.targetDisplayName,
+        description: checkout.targetDescription,
+        imageUrl: checkout.targetImageUrl,
+        faviconUrl: checkout.targetFaviconUrl,
+        categoryId: checkout.targetCategoryId,
+        currentAmount: checkout.deltaAmount,
+        raiseCount: 0,
+        status: "ACTIVE" as const,
+        firstPaidAt: now,
+        lastPaidAt: now,
+      };
+      const result = existing
+        ? await tx.listing.update({ where: { id: existing.id }, data: freshData })
+        : await tx.listing.create({ data: { ...freshData, normalizedKey: checkout.targetListingKey } });
+      listingId = result.id;
+      listingSlug = result.slug;
+      listingDisplayName = result.displayName;
+      categoryId = result.categoryId;
+      resultingTotal = result.currentAmount;
     }
 
     await tx.bid.create({
