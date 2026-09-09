@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { getListingBySlug, getRankContext } from "@/lib/ranking";
 import { formatUsd } from "@/lib/format";
 
-export const alt = "RankWar ranking";
+export const alt = "Who's #1 ranking";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -18,8 +18,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   if (!listing) {
     return new ImageResponse(
       (
-        <div style={{ display: "flex", width: "100%", height: "100%", background: BG, color: FG, alignItems: "center", justifyContent: "center", fontSize: 48 }}>
-          RankWar
+        <div style={{ display: "flex", width: "100%", height: "100%", background: BG, color: FG, alignItems: "center", justifyContent: "center", gap: 12, fontSize: 48, fontWeight: 700 }}>
+          <span>Who&apos;s</span>
+          <span style={{ color: ACCENT }}>#1</span>
         </div>
       ),
       size
@@ -44,8 +45,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", fontSize: 36, fontWeight: 700 }}>
-            RankWar<span style={{ color: ACCENT }}>.</span>
+          <div style={{ display: "flex", gap: 8, fontSize: 36, fontWeight: 700 }}>
+            <span>Who&apos;s</span>
+            <span style={{ color: ACCENT }}>#1</span>
           </div>
           <div
             style={{
@@ -79,7 +81,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         </div>
 
         <div style={{ display: "flex", fontSize: 24, color: MUTED }}>
-          #{rank.categoryRank} in {listing.category.name} · rankwar
+          #{rank.categoryRank} in {listing.category.name} · who&apos;s #1
         </div>
       </div>
     ),

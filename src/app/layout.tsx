@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "RankWar";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Who's #1";
 
 export const metadata: Metadata = {
   title: { default: `${siteName} — Claim a rank on the public leaderboard`, template: `%s · ${siteName}` },

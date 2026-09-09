@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { closeDailyBoard } from "@/lib/daily-close";
 
-// Wire this up to a daily scheduler (Vercel Cron, GitHub Actions, etc.)
-// hitting it once shortly after UTC midnight with:
-//   Authorization: Bearer <CRON_SECRET>
-export async function POST(request: Request) {
+// Wire this up to a daily scheduler hitting it once shortly after UTC
+// midnight with Authorization: Bearer <CRON_SECRET>. Vercel Cron issues a
+// GET and auto-attaches that header whenever the env var is named
+// CRON_SECRET, so GET is handled here too (not just POST for manual/other
+// schedulers).
+async function handleClose(request: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret) {
     return NextResponse.json({ error: "CRON_SECRET is not configured." }, { status: 500 });
@@ -23,3 +25,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err instanceof Error ? err.message : "Failed to close daily board." }, { status: 400 });
   }
 }
+
+export const GET = handleClose;
+export const POST = handleClose;

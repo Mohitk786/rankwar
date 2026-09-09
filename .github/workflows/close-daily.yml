@@ -1,0 +1,16 @@
+name: Close daily board
+
+on:
+  schedule:
+    # 00:05 UTC — shortly after the UTC day closeDailyBoard freezes has ended
+    - cron: "5 0 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  close-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hit close-daily endpoint
+        run: |
+          curl -sf -X POST "${{ vars.SITE_URL }}/api/cron/close-daily" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}"

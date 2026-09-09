@@ -11,7 +11,7 @@ export function Footer() {
   return (
     <footer className="mt-16 border-t border-border">
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} RankWar. Rank is what you pay — nothing else.</p>
+        <p>© {new Date().getFullYear()} Who&apos;s #1. Rank is what you pay — nothing else.</p>
         <nav className="flex flex-wrap gap-4">
           {LEGAL_LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">

@@ -10,7 +10,7 @@ export default async function AboutPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-6 font-mono text-2xl font-bold">About RankWar</h1>
+      <h1 className="mb-6 font-mono text-2xl font-bold">About Who&apos;s #1</h1>
 
       <div className="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat icon={ListOrdered} label="Listings" value={stats.listingCount} variant="count" />
@@ -21,7 +21,7 @@ export default async function AboutPage() {
 
       <div className="prose prose-sm max-w-none space-y-4 text-sm leading-relaxed">
         <p>
-          RankWar is one public, permanent leaderboard. Anyone can pay to insert a listing — a product site or an
+          Who&apos;s #1 is one public, permanent leaderboard. Anyone can pay to insert a listing — a product site or an
           X/Twitter handle — at a rank determined purely by how much they&apos;ve paid. No votes, no reviews, no
           algorithm beyond sorting by dollars spent.
         </p>

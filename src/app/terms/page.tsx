@@ -4,13 +4,13 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "1. Acceptance",
     body: [
-      "By submitting a listing or making a payment on RankWar, you agree to these Terms of Service, the Rules, and the Privacy Policy. If you don't agree, don't use the service.",
+      "By submitting a listing or making a payment on Who's #1, you agree to these Terms of Service, the Rules, and the Privacy Policy. If you don't agree, don't use the service.",
     ],
   },
   {
     heading: "2. What you're buying",
     body: [
-      "A payment buys placement on the public leaderboard at a rank determined by cumulative amount paid, for as long as that amount keeps you above the applicable threshold on the board(s) it applies to. It is not a guarantee of traffic, conversions, or any particular outcome, and it is not an endorsement of the listed product by RankWar.",
+      "A payment buys placement on the public leaderboard at a rank determined by cumulative amount paid, for as long as that amount keeps you above the applicable threshold on the board(s) it applies to. It is not a guarantee of traffic, conversions, or any particular outcome, and it is not an endorsement of the listed product by Who's #1.",
     ],
   },
   {
@@ -44,7 +44,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "7. Limitation of liability",
     body: [
-      "To the maximum extent permitted by law, RankWar's total liability for any claim arising from your use of the service is limited to the amount you paid in the 12 months before the claim arose.",
+      "To the maximum extent permitted by law, Who's #1's total liability for any claim arising from your use of the service is limited to the amount you paid in the 12 months before the claim arose.",
     ],
   },
   {

@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!listing) return { title: "Listing not found" };
   const rank = await getRankContext(listing);
   return {
-    title: `${listing.displayName} · #${rank.overallRank} on RankWar`,
-    description: listing.description ?? `${listing.displayName} — #${rank.overallRank} overall on the RankWar leaderboard.`,
+    title: `${listing.displayName} · #${rank.overallRank} on Who's #1`,
+    description: listing.description ?? `${listing.displayName} — #${rank.overallRank} overall on the Who's #1 leaderboard.`,
     // opengraph-image.tsx (file convention, same route segment) supplies the share image.
   };
 }

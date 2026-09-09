@@ -1,4 +1,4 @@
-# RankWar
+# Who's #1
 
 A public, permanent, pay-to-rank leaderboard — rank is purely a function of cumulative dollars paid. Built from a
 reverse-engineering blueprint of outbid.lol's mechanism (see the original report for the full product rationale).
@@ -24,9 +24,9 @@ Checkout (test mode).
 Spin up Postgres (any Postgres 14+ works; this repo was developed against a dedicated Docker container):
 
 ```bash
-docker run -d --name rankwar-postgres \
-  -e POSTGRES_USER=rankwar -e POSTGRES_PASSWORD=rankwar_dev_pw -e POSTGRES_DB=rankwar \
-  -p 5460:5432 -v rankwar_pgdata:/var/lib/postgresql postgres:18
+docker run -d --name whos1-postgres \
+  -e POSTGRES_USER=whos1 -e POSTGRES_PASSWORD=whos1_dev_pw -e POSTGRES_DB=whos1 \
+  -p 5460:5432 -v whos1_pgdata:/var/lib/postgresql postgres:18
 ```
 
 Copy `.env.example` to `.env` and point `DATABASE_URL` at it.

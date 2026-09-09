@@ -82,7 +82,7 @@ export async function safeFetchHtml(inputUrl: string): Promise<SafeFetchResult |
         redirect: "manual",
         signal: controller.signal,
         headers: {
-          "User-Agent": "RankWarBot/1.0 (+https://rankwar.example/about)",
+          "User-Agent": "Whos1Bot/1.0 (+https://whos1.example/about)",
           Accept: "text/html,application/xhtml+xml",
         },
       });

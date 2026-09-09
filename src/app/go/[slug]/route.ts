@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   });
 
   const destination = new URL(listing.destinationUrl);
-  destination.searchParams.set("utm_source", "rankwar");
+  destination.searchParams.set("utm_source", "whos1");
 
   return NextResponse.redirect(destination);
 }

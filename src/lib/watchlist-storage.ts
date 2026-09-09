@@ -1,10 +1,10 @@
 "use client";
 
-const KEY = "rankwar:watchlist";
+const KEY = "whos1:watchlist";
 
 /**
  * Per-browser watchlist — deliberately localStorage-only, no account or
- * server-side "watch" row. RankWar has no login system by design, so this
+ * server-side "watch" row. Who's #1 has no login system by design, so this
  * is the only way to let a visitor track listings across return visits
  * without inventing accounts/email just for this one feature.
  */

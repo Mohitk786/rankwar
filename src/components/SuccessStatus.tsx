@@ -46,8 +46,8 @@ export function SuccessStatus({ sessionId }: { sessionId: string }) {
     const isTop = win.overallRank === 1;
     const shareUrl = `${window.location.origin}/product/${win.listingSlug}`;
     const shareText = isTop
-      ? `I just took #1 on RankWar in ${win.categoryName} 🏆`
-      : `I'm #${win.overallRank} on RankWar (#${win.categoryRank} in ${win.categoryName})`;
+      ? `I just took #1 on Who's #1 in ${win.categoryName} 🏆`
+      : `I'm #${win.overallRank} on Who's #1 (#${win.categoryRank} in ${win.categoryName})`;
     const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
 

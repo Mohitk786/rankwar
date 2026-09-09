@@ -17,7 +17,7 @@ export function generateListingFaq(listing: ListingFaqInput): { question: string
   const faq: { question: string; answer: string }[] = [];
 
   faq.push({
-    question: `What rank does ${listing.displayName} hold on RankWar?`,
+    question: `What rank does ${listing.displayName} hold on Who's #1?`,
     answer: `${listing.displayName} is currently #${listing.overallRank} of ${listing.overallTotal} overall, and #${listing.categoryRank} of ${listing.categoryTotal} in ${listing.category.name}, at ${formatUsd(listing.currentAmount)}.`,
   });
 
@@ -30,7 +30,7 @@ export function generateListingFaq(listing: ListingFaqInput): { question: string
 
   if (listing.clickCount > 0) {
     faq.push({
-      question: `How many visitors has ${listing.displayName} gotten from RankWar?`,
+      question: `How many visitors has ${listing.displayName} gotten from Who's #1?`,
       answer: `${listing.clickCount.toLocaleString("en-US")} recorded clicks from the board so far.`,
     });
   }

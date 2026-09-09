@@ -1,9 +1,9 @@
-# RankWar — Strategy: Path to ₹1,00,000/month
+# Who's #1 — Strategy: Path to ₹1,00,000/month
 
 ## Top 20 problems (ranked)
 
 1. Stripe is in test mode — ₹0 can currently be collected. **P0.**
-2. Zero distribution — nobody outside this session knows RankWar exists.
+2. Zero distribution — nobody outside this session knows Who's #1 exists.
 3. No shareable win artifact after payment.
 4. No visible "price to beat the next rank" ladder.
 5. Positioning is a generic global clone of an already-copied mechanism.
@@ -33,8 +33,8 @@
 6. **"You got outbid" notification** — converts a one-time payer into a repeat payer without any new acquisition cost.
 7. **Category-specific cheap #1s** (already built) — the actual affordability ladder; needs to be *marketed*, not just exist.
 8. **Direct sponsorship deals** — manually offer a founder "front page feature this week for ₹X," no code required, pure sales.
-9. **Embeddable rank badge** — free backlinks + a constant reminder to the payer's own site visitors that RankWar exists.
-10. **Build-in-public content on X about RankWar's own numbers** — the meta-story ("here's how much this made this week") is itself distribution.
+9. **Embeddable rank badge** — free backlinks + a constant reminder to the payer's own site visitors that Who's #1 exists.
+10. **Build-in-public content on X about the numbers behind Who's #1** — the meta-story ("here's how much this made this week") is itself distribution.
 
 ## Top 10 growth opportunities
 
@@ -143,7 +143,7 @@ Illustrative blend (not a promise — a shape):
 | Time-boxed placement (flat "24h #1" price) | Medium | Medium | Direct | Defer to v2 |
 | "Rank insurance" boost microtransaction | Low–medium | Medium | Direct but speculative | Defer |
 
-**No subscription tier** — the core one-time-payment transaction is simple and already validated by the reference product; adding recurring billing solves no problem RankWar actually has right now.
+**No subscription tier** — the core one-time-payment transaction is simple and already validated by the reference product; adding recurring billing solves no problem Who's #1 actually has right now.
 
 ---
 
@@ -159,7 +159,7 @@ Evaluated and rejected as *primary* channels: Product Hunt (good for a later awa
 
 **Channel 1 — Warm direct outreach** (X DMs, founder communities/WhatsApp/Discord groups you're already in). CAC: ~$0 (time only). Effort: low. Expected conversion: highest of any channel available, because trust is inherited from the existing relationship, which is the one thing a 1-day-old product can't otherwise buy. Offer: free or steeply discounted first listing for the first 15–20 real founders, specifically to seed real social proof before charging anyone else full price.
 
-**Channel 2 — Build-in-public content on X**, documenting RankWar's own real numbers (visitors, listings, revenue) as they happen. CAC: $0. Effort: low. This audience (indie hackers) specifically rewards revenue transparency — the meta-story of the product *is* the marketing.
+**Channel 2 — Build-in-public content on X**, documenting the real numbers behind Who's #1 (visitors, listings, revenue) as they happen. CAC: $0. Effort: low. This audience (indie hackers) specifically rewards revenue transparency — the meta-story of the product *is* the marketing.
 
 Everything else (Product Hunt, Reddit, SEO, partnerships) is a **later lever**, once the board has enough real content that a new visitor doesn't land on an empty page.
 
@@ -170,17 +170,17 @@ Everything else (Product Hunt, Reddit, SEO, partnerships) is a **later lever**, 
 Tone target: "would you like your startup listed" — never "buy our advertising."
 
 **X DM**
-1. "Hey [name] — building RankWar, a pay-to-rank leaderboard for Indian SaaS/AI founders (public, permanent, rank = $ paid, nothing else). Would love [product] to be one of the first real listings — first 20 are free. Interested?"
-2. "Saw [product] and thought it'd fit RankWar — a leaderboard where founders pay to rank #1 in their category. Giving away the first 20 listings free while I seed real content. Want in?"
-3. "Quick one — I built a pay-to-rank leaderboard (RankWar), currently seeding the first real listings for free before I open it up properly. [product] would be a good fit for [category]. Want a free spot?"
+1. "Hey [name] — building Who's #1, a pay-to-rank leaderboard for Indian SaaS/AI founders (public, permanent, rank = $ paid, nothing else). Would love [product] to be one of the first real listings — first 20 are free. Interested?"
+2. "Saw [product] and thought it'd fit Who's #1 — a leaderboard where founders pay to rank #1 in their category. Giving away the first 20 listings free while I seed real content. Want in?"
+3. "Quick one — I built a pay-to-rank leaderboard (Who's #1), currently seeding the first real listings for free before I open it up properly. [product] would be a good fit for [category]. Want a free spot?"
 
 **Email**
-1. Subject: "Free spot on RankWar for [product]" — "Hi [name], I built RankWar — a public leaderboard where founders pay to claim rank based on how much they've paid, nothing else. I'm seeding the first 20 real listings for free before opening it up. Would [product] like one? Takes 2 minutes, no card needed for now: [link]."
-2. Subject: "Would [product] like a free RankWar listing?" — same offer, shorter, one link.
+1. Subject: "Free spot on Who's #1 for [product]" — "Hi [name], I built Who's #1 — a public leaderboard where founders pay to claim rank based on how much they've paid, nothing else. I'm seeding the first 20 real listings for free before opening it up. Would [product] like one? Takes 2 minutes, no card needed for now: [link]."
+2. Subject: "Would [product] like a free Who's #1 listing?" — same offer, shorter, one link.
 3. Subject: "Building something you might find funny/useful" — more casual framing, links to the live board, explicit "no strings, just want real listings before I start charging strangers."
 
 **LinkedIn**
-1. "Building RankWar — a public leaderboard where startups pay to rank #1 (literally: rank = money paid, nothing else). Seeding the first 20 listings free. Would [product] want a spot?"
+1. "Building Who's #1 — a public leaderboard where startups pay to rank #1 (literally: rank = money paid, nothing else). Seeding the first 20 listings free. Would [product] want a spot?"
 2. "Curious if [product] would want a free listing on something I built — a pay-to-rank leaderboard for founders. Early seed group, no cost yet."
 3. Comment-then-DM: engage genuinely on their post first, then DM the same offer — works better on LinkedIn than a cold open.
 

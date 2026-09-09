@@ -1,4 +1,4 @@
-# RankWar — Current State Audit
+# Who's #1 — Current State Audit
 
 *As of 2026-09-08. Stack: Next.js 16 (App Router, TS) · Prisma 7 + `@prisma/adapter-pg` · Postgres (Supabase, production) · Stripe Checkout (**test mode**) · Vercel.*
 
@@ -50,7 +50,7 @@ Nothing, currently — two real bugs surfaced and were fixed this session (missi
 1. Zero real listings beyond this session's own tests — an empty-feeling board has no social proof, and social proof is most of what makes a stranger pay.
 2. No outreach has happened yet.
 3. No artifact exists for a payer to post publicly.
-4. Generic, global, un-differentiated positioning — competes head-on against the original (outbid.lol) and its already-established copycats with no distinct reason to choose RankWar.
+4. Generic, global, un-differentiated positioning — competes head-on against the original (outbid.lol) and its already-established copycats with no distinct reason to choose Who's #1.
 
 ## H. What prevents trust
 

@@ -21,7 +21,7 @@ export async function Header() {
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
         <div className="flex items-center gap-3">
           <Link href="/" className="font-mono text-lg font-bold tracking-tight">
-            RankWar<span className="text-accent">.</span>
+            Who&apos;s <span className="text-accent">#1</span>
           </Link>
           {pulse.clicksLast24h > 0 ? (
             <span className="hidden items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-xs text-muted sm:flex">

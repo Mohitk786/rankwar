@@ -92,11 +92,11 @@ export async function createCheckoutSession(input: CheckoutRequest, visitorId: s
           price_data: {
             currency: "usd",
             product_data: {
-              name: `RankWar rank — ${checkout.targetDisplayName}`,
+              name: `Who's #1 rank — ${checkout.targetDisplayName}`,
               description:
                 pricingContext.existingAmount !== null
-                  ? "Raise your rank on the RankWar leaderboard"
-                  : "New listing on the RankWar leaderboard",
+                  ? "Raise your rank on the Who's #1 leaderboard"
+                  : "New listing on the Who's #1 leaderboard",
             },
             unit_amount: deltaAmount * 100,
           },
