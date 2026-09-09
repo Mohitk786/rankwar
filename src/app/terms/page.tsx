@@ -16,7 +16,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "3. Payments and refunds",
     body: [
-      "Checkout is processed by Stripe. All payments are final and not refundable, including if you are later outranked, if a listing is removed for a rules breach, or in the event of service downtime.",
+      "Checkout is processed by Dodo Payments, our merchant of record. All payments are final and not refundable, including if you are later outranked, if a listing is removed for a rules breach, or in the event of service downtime.",
       "Where a jurisdiction's mandatory consumer-protection law grants a withdrawal or refund right that cannot be lawfully waived, we honor that right to the extent required by law.",
       "Chargebacks and payment disputes are a breach of these Terms and grounds for listing removal and a ban from future use, independent of the outcome of the dispute itself.",
     ],

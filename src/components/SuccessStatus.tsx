@@ -17,7 +17,7 @@ type WinData = {
   categoryTotal: number;
 };
 
-export function SuccessStatus({ sessionId }: { sessionId: string }) {
+export function SuccessStatus({ checkoutId }: { checkoutId: string }) {
   const [status, setStatus] = useState<Status>("PENDING");
   const [win, setWin] = useState<WinData | null>(null);
   const [attempts, setAttempts] = useState(0);
@@ -29,7 +29,7 @@ export function SuccessStatus({ sessionId }: { sessionId: string }) {
 
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/checkout/status?session_id=${encodeURIComponent(sessionId)}`);
+        const res = await fetch(`/api/checkout/status?checkoutId=${encodeURIComponent(checkoutId)}`);
         const data = await res.json();
         setStatus(data.status);
         if (data.status === "SUCCEEDED" && data.listingSlug) setWin(data);
@@ -40,7 +40,7 @@ export function SuccessStatus({ sessionId }: { sessionId: string }) {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [status, attempts, sessionId]);
+  }, [status, attempts, checkoutId]);
 
   if (status === "SUCCEEDED" && win) {
     const isTop = win.overallRank === 1;
@@ -115,7 +115,7 @@ export function SuccessStatus({ sessionId }: { sessionId: string }) {
   if (attempts > 30) {
     return (
       <p className="text-muted">
-        Still confirming with Stripe — this can occasionally take a minute. Refresh this page shortly, or check the
+        Still confirming with Dodo Payments — this can occasionally take a minute. Refresh this page shortly, or check the
         board directly.
       </p>
     );

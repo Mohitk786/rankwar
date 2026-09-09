@@ -6,7 +6,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
     body: [
       "A first-party, HttpOnly visitor cookie (random, lasting up to a year) used to attach a checkout to your browser and to de-duplicate clicks. It doesn't identify you personally and isn't linked to an account.",
       "When you visit a listing from the board, we record the listing, a timestamp, the visitor cookie, and a hashed IP address (hashed with a salt that rotates daily, so raw IPs aren't retained). This is used for rate limiting and fake-click reduction, not to profile you.",
-      "When you check out, Stripe collects billing information (name, email, address, payment details) directly as our payment processor. We receive confirmation of the payment and the amount, not your full card details.",
+      "When you check out, Dodo Payments collects billing information (name, email, address, payment details) directly as our merchant of record. We receive confirmation of the payment and the amount, not your full card details.",
       "Standard technical data (user agent, referrer) processed by our hosting and analytics infrastructure.",
     ],
   },
@@ -19,7 +19,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Who we share it with",
     body: [
-      "Stripe, as our payment processor, for billing and fraud prevention. Our hosting and database providers, to operate the service. We don't sell personal data.",
+      "Dodo Payments, as our merchant of record, for billing and fraud prevention. Our hosting and database providers, to operate the service. We don't sell personal data.",
     ],
   },
   {

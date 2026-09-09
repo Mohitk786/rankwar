@@ -4,11 +4,19 @@ import { getRankContext } from "@/lib/ranking";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const sessionId = searchParams.get("session_id");
-  if (!sessionId) return NextResponse.json({ error: "Missing session_id." }, { status: 400 });
+  const checkoutId = searchParams.get("checkoutId");
+  if (!checkoutId) return NextResponse.json({ error: "Missing checkoutId." }, { status: 400 });
 
-  const checkout = await db.checkout.findUnique({ where: { stripeSessionId: sessionId } });
+  let checkout = await db.checkout.findUnique({ where: { id: checkoutId } });
   if (!checkout) return NextResponse.json({ status: "UNKNOWN" });
+
+  // Dodo has no webhook for an abandoned checkout session (a session never
+  // fires any event unless a payment was actually attempted), so unlike
+  // Stripe's `checkout.session.expired` webhook, expiry here is lazy —
+  // checked on each poll instead of being event-driven.
+  if ((checkout.status === "INITIATED" || checkout.status === "PENDING") && checkout.expiresAt < new Date()) {
+    checkout = await db.checkout.update({ where: { id: checkout.id }, data: { status: "EXPIRED" } });
+  }
 
   if (checkout.status === "SUCCEEDED") {
     const listing = await db.listing.findUnique({

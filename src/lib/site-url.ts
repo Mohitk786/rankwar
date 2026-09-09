@@ -6,7 +6,7 @@
  * 3. VERCEL_URL — the current deployment's own URL (covers preview deploys).
  * 4. localhost, for local dev.
  *
- * Exists so Stripe redirect URLs, the sitemap, and share links never silently
+ * Exists so Dodo Payments redirect URLs, the sitemap, and share links never silently
  * fall back to localhost in production just because someone forgot to set
  * NEXT_PUBLIC_SITE_URL before a build — Vercel's own env vars self-heal this.
  */

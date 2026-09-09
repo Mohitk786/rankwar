@@ -31,7 +31,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What data do you collect?",
-    a: "See the Privacy Policy for the full breakdown — in short: a first-party visitor cookie, hashed IPs on clicks, and whatever Stripe collects for billing. We don't sell data.",
+    a: "See the Privacy Policy for the full breakdown — in short: a first-party visitor cookie, hashed IPs on clicks, and whatever Dodo Payments collects for billing. We don't sell data.",
   },
 ];
 

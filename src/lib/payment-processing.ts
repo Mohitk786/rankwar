@@ -1,4 +1,3 @@
-import type Stripe from "stripe";
 import type { Prisma } from "@prisma/client";
 import { db } from "./db";
 import { uniqueSlugFor } from "./slugify";
@@ -57,10 +56,10 @@ async function recordOvertakenEvents(
 }
 
 /**
- * Applies a confirmed Stripe Checkout Session to the board: creates the
+ * Applies a confirmed Dodo Payments payment to the board: creates the
  * listing (first payment) or atomically raises it (repeat payment), and
  * records the append-only Bid row. Idempotent at the call site — the
- * webhook route only calls this once per unique Stripe event id, and this
+ * webhook route only calls this once per unique Dodo event id, and this
  * function itself no-ops if the checkout was already applied.
  *
  * The `currentAmount: { increment }` update compiles to a single atomic
@@ -69,16 +68,18 @@ async function recordOvertakenEvents(
  * the UPDATE takes — no explicit `SELECT ... FOR UPDATE` needed. Two
  * webhooks for *different* listings never contend at all.
  */
-export async function applySucceededCheckoutSession(session: Stripe.Checkout.Session) {
-  const checkoutId = session.metadata?.checkoutId;
-  if (!checkoutId) return { applied: false as const, reason: "missing checkoutId in session metadata" };
+export async function applySucceededCheckoutSession({
+  checkoutId,
+  dodoPaymentId,
+}: {
+  checkoutId: string | undefined;
+  dodoPaymentId: string;
+}) {
+  if (!checkoutId) return { applied: false as const, reason: "missing checkoutId in payment metadata" };
 
   const checkout = await db.checkout.findUnique({ where: { id: checkoutId } });
   if (!checkout) return { applied: false as const, reason: "checkout not found" };
   if (checkout.status === "SUCCEEDED") return { applied: false as const, reason: "already applied" };
-
-  const paymentIntentId =
-    typeof session.payment_intent === "string" ? session.payment_intent : (session.payment_intent?.id ?? null);
 
   await db.$transaction(async (tx) => {
     const existing = await tx.listing.findUnique({ where: { normalizedKey: checkout.targetListingKey } });
@@ -151,27 +152,21 @@ export async function applySucceededCheckoutSession(session: Stripe.Checkout.Ses
 
     await tx.checkout.update({
       where: { id: checkout.id },
-      data: { status: "SUCCEEDED", stripePaymentIntentId: paymentIntentId },
+      data: { status: "SUCCEEDED", dodoPaymentId },
     });
   });
 
   return { applied: true as const };
 }
 
-export async function markCheckoutFailed(sessionId: string) {
+export async function markCheckoutFailed(checkoutId: string) {
   await db.checkout
-    .updateMany({ where: { stripeSessionId: sessionId, status: { in: ["INITIATED", "PENDING"] } }, data: { status: "FAILED" } })
+    .updateMany({ where: { id: checkoutId, status: { in: ["INITIATED", "PENDING"] } }, data: { status: "FAILED" } })
     .catch(() => {});
 }
 
-export async function markCheckoutExpired(sessionId: string) {
-  await db.checkout
-    .updateMany({ where: { stripeSessionId: sessionId, status: { in: ["INITIATED", "PENDING"] } }, data: { status: "EXPIRED" } })
-    .catch(() => {});
-}
-
-export async function flagListingForDispute(paymentIntentId: string, reason: string) {
-  const checkout = await db.checkout.findUnique({ where: { stripePaymentIntentId: paymentIntentId } });
+export async function flagListingForDispute(dodoPaymentId: string, reason: string) {
+  const checkout = await db.checkout.findUnique({ where: { dodoPaymentId } });
   if (!checkout) return;
   const listing = await db.listing.findUnique({ where: { normalizedKey: checkout.targetListingKey } });
   if (!listing) return;

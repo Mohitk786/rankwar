@@ -18,7 +18,7 @@ export function AdminReconcileButton({ checkoutId }: { checkoutId: string }) {
       setMessage(data.error ?? "Failed to check.");
       return;
     }
-    setMessage(data.applied ? "Applied — listing updated." : `Stripe status: ${data.stripeStatus} / ${data.paymentStatus}`);
+    setMessage(data.applied ? "Applied — listing updated." : `Dodo Payments status: ${data.paymentStatus}`);
     router.refresh();
   }
 
@@ -29,7 +29,7 @@ export function AdminReconcileButton({ checkoutId }: { checkoutId: string }) {
         disabled={pending}
         className="rounded border border-border px-2 py-1 text-xs hover:border-foreground/40"
       >
-        {pending ? "Checking…" : "Check with Stripe"}
+        {pending ? "Checking…" : "Check with Dodo Payments"}
       </button>
       {message ? <span className="text-xs text-muted">{message}</span> : null}
     </div>

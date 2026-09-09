@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { db } from "./db";
-import { getStripe } from "./stripe";
+import { getDodo } from "./dodo";
 import { normalizeSubmission, SubmissionValidationError } from "./normalize-url";
 import { getPricingContext, validateTargetAmount, PricingError } from "./pricing";
 import { resolveMetadata } from "./metadata";
@@ -63,7 +63,7 @@ export async function createCheckoutSession(input: CheckoutRequest, visitorId: s
   const placeholderSessionId = `pending_${randomBytes(16).toString("hex")}`;
   const checkout = await db.checkout.create({
     data: {
-      stripeSessionId: placeholderSessionId,
+      dodoSessionId: placeholderSessionId,
       visitorId,
       listingType: submission.type,
       targetListingKey: submission.normalizedKey,
@@ -84,45 +84,33 @@ export async function createCheckoutSession(input: CheckoutRequest, visitorId: s
   const siteUrl = getSiteUrl();
 
   try {
-    const stripe = getStripe();
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: `Who's #1 rank — ${checkout.targetDisplayName}`,
-              description:
-                pricingContext.existingAmount !== null
-                  ? "Raise your rank on the Who's #1 leaderboard"
-                  : "New listing on the Who's #1 leaderboard",
-            },
-            unit_amount: deltaAmount * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+    const productId = process.env.DODO_PRODUCT_ID;
+    if (!productId) {
+      throw new Error("DODO_PRODUCT_ID is not set. Add the rank-raise product id to .env before using checkout.");
+    }
+
+    const dodo = getDodo();
+    const session = await dodo.checkoutSessions.create({
+      product_cart: [{ product_id: productId, quantity: 1, amount: deltaAmount * 100 }],
+      return_url: `${siteUrl}/success?checkoutId=${checkout.id}`,
       cancel_url: `${siteUrl}/`,
-      billing_address_collection: "required",
       metadata: { checkoutId: checkout.id },
     });
 
     await db.checkout.update({
       where: { id: checkout.id },
-      data: { stripeSessionId: session.id, status: "PENDING" },
+      data: { dodoSessionId: session.session_id, status: "PENDING" },
     });
 
-    if (!session.url) throw new Error("Stripe did not return a checkout URL.");
-    return { url: session.url };
+    if (!session.checkout_url) throw new Error("Dodo Payments did not return a checkout URL.");
+    return { url: session.checkout_url };
   } catch (err) {
     await db.checkout.update({ where: { id: checkout.id }, data: { status: "FAILED" } }).catch(() => {});
     if (err instanceof CheckoutRequestError) throw err;
     throw new CheckoutRequestError(
-      err instanceof Error && err.message.includes("STRIPE_SECRET_KEY")
+      err instanceof Error && (err.message.includes("DODO_PAYMENTS_API_KEY") || err.message.includes("DODO_PRODUCT_ID"))
         ? err.message
-        : "Could not start checkout with Stripe. Please try again.",
+        : "Could not start checkout with Dodo Payments. Please try again.",
       502
     );
   }

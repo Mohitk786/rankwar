@@ -118,8 +118,8 @@ model Bid {
 
 model Checkout {
   id                     String          @id @default(cuid())
-  stripeSessionId        String          @unique
-  stripePaymentIntentId  String?         @unique
+  dodoSessionId          String          @unique
+  dodoPaymentId          String?         @unique
   visitorId              String?
   listingType            ListingType
   targetListingKey       String
@@ -137,13 +137,13 @@ model Checkout {
   expiresAt              DateTime
   bid                    Bid?
 
-  @@index([stripeSessionId])
+  @@index([dodoSessionId])
   @@index([status, expiresAt])
 }
 
 model PaymentEvent {
   id              String              @id @default(cuid())
-  provider        String              @default("stripe")
+  provider        String              @default("dodo")
   eventId         String              @unique
   eventType       String
   rawPayload      Json

@@ -41,7 +41,7 @@ const SECTIONS: { heading: string; body: string[] }[] = [
   {
     heading: "Payments",
     body: [
-      "Checkout is handled by Stripe. All payments are final and not refundable — appearing on the board at whatever rank your payment supports is the entire deliverable, whether or not you're later outranked.",
+      "Checkout is handled by Dodo Payments. All payments are final and not refundable — appearing on the board at whatever rank your payment supports is the entire deliverable, whether or not you're later outranked.",
       "If someone else pays more while you're mid-checkout, you still land on the board — just not necessarily at the rank you were aiming for. We don't reserve ranks during checkout; the final sort order is always the source of truth.",
     ],
   },

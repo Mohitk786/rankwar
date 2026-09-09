@@ -54,7 +54,7 @@ export default async function AdminDashboardPage({
           <h2 className="mb-3 font-semibold">Payment reconciliation</h2>
           <p className="mb-3 text-xs text-muted">
             Checkouts that expired without a confirmed webhook, and events that received but never finished
-            processing — click through to re-check directly against Stripe.
+            processing — click through to re-check directly against Dodo Payments.
           </p>
           {stuckCheckouts.length > 0 ? (
             <div className="mb-4 overflow-x-auto scrollbar-thin rounded-lg border border-border">

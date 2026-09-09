@@ -126,8 +126,8 @@ async function main() {
           checkoutCounter += 1;
           const checkout = await db.checkout.create({
             data: {
-              stripeSessionId: `seed_cs_${listing.id}_${checkoutCounter}`,
-              stripePaymentIntentId: `seed_pi_${listing.id}_${checkoutCounter}`,
+              dodoSessionId: `seed_cs_${listing.id}_${checkoutCounter}`,
+              dodoPaymentId: `seed_pi_${listing.id}_${checkoutCounter}`,
               visitorId: `seed-visitor-${randomInt(1, 500)}`,
               listingType: "WEBSITE",
               targetListingKey: domain,
