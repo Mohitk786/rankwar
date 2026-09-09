@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Moon, Sun } from "lucide-react";
 
 export function DarkModeToggle() {
   const [isDark, setIsDark] = useState<boolean | null>(null);
@@ -24,11 +25,23 @@ export function DarkModeToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggle}
       aria-label="Toggle dark mode"
-      className="rounded-md border border-border px-2 py-1 text-xs text-muted hover:text-foreground hover:border-foreground/40 transition-colors"
+      aria-pressed={isDark ?? undefined}
+      className="relative inline-flex h-7 w-14 shrink-0 items-center rounded-full border border-border bg-background transition-colors"
     >
-      {isDark === null ? "…" : isDark ? "Light" : "Dark"}
+      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-1.5">
+        <Sun className="h-3.5 w-3.5 text-muted" strokeWidth={2.5} />
+        <Moon className="h-3.5 w-3.5 text-muted" strokeWidth={2.5} />
+      </span>
+      <span
+        className={`absolute left-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-sm transition-transform duration-200 ease-out ${
+          isDark === null ? "translate-x-0 opacity-0" : isDark ? "translate-x-7" : "translate-x-0"
+        }`}
+      >
+        {isDark ? <Moon className="h-3.5 w-3.5" strokeWidth={2.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={2.5} />}
+      </span>
     </button>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatCount, formatRelativeTime, formatUsd } from "@/lib/format";
+import { Flame } from "lucide-react";
+import { formatCount, formatRelativeTime, formatUsd, minutesAgo } from "@/lib/format";
 import { TAKE_FIRST_PLACE_MARGIN } from "@/lib/pricing";
 import { CategoryTag } from "./CategoryTag";
 
@@ -14,6 +15,15 @@ export type BoardRow = {
   lastPaidAt: Date;
   category: { slug: string; name: string };
 };
+
+/** Rank 1/2/3 read as gold/silver/bronze-in-brand-colors medallions — everyone below is a plain number. */
+const TOP_RANK_STYLES = [
+  { medal: "bg-gradient-to-br from-accent to-emerald-600 text-accent-foreground ring-2 ring-accent/40 shadow-[0_0_12px_-2px] shadow-accent/50", edge: "before:bg-accent" },
+  { medal: "bg-gradient-to-br from-amber-300 to-amber-500 text-amber-950 ring-2 ring-amber-400/40", edge: "before:bg-amber-400" },
+  { medal: "bg-gradient-to-br from-orange-400 to-orange-700 text-orange-50 ring-2 ring-orange-500/30", edge: "before:bg-orange-500" },
+];
+
+const HOT_WINDOW_MINUTES = 180;
 
 export function BoardTable({
   rows,
@@ -31,16 +41,28 @@ export function BoardTable({
     );
   }
 
+  const hotSince = minutesAgo(HOT_WINDOW_MINUTES);
+
   return (
     <ol className="divide-y divide-border rounded-lg border border-border">
       {rows.map((row, index) => {
         const margin = isGlobalAllTimeBoard && index === 0 ? TAKE_FIRST_PLACE_MARGIN : 1;
         const priceToBeat = row.amount + margin;
+        const topStyle = TOP_RANK_STYLES[index];
+        const isHot = row.lastPaidAt > hotSince;
+        const isFirstRow = index === 0;
+        const isLastRow = index === rows.length - 1;
 
         return (
           <li
             key={row.id}
-            className="group/row relative transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-surface"
+            className={`group/row relative transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-surface ${
+              topStyle
+                ? `before:absolute before:inset-y-0 before:left-0 before:w-1 before:content-[''] ${topStyle.edge} ${
+                    isFirstRow ? "before:rounded-tl-lg" : ""
+                  } ${isLastRow ? "before:rounded-bl-lg" : ""}`
+                : ""
+            }`}
           >
             {/* Stretched link: clicking anywhere on the row (except "See details") goes straight to the destination — matching a real placement, not an internal detail page. */}
             <a
@@ -60,7 +82,15 @@ export function BoardTable({
             </div>
 
             <div className="flex items-center gap-3 px-3 py-3 sm:gap-4 sm:px-4">
-              <span className="w-7 shrink-0 text-right font-mono text-sm tabular text-muted">{index + 1}</span>
+              {topStyle ? (
+                <span
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-mono text-xs font-bold tabular ${topStyle.medal}`}
+                >
+                  {index + 1}
+                </span>
+              ) : (
+                <span className="w-7 shrink-0 text-right font-mono text-sm tabular text-muted">{index + 1}</span>
+              )}
               <span className="h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-surface ring-1 ring-border">
                 {row.faviconUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -71,6 +101,15 @@ export function BoardTable({
                 <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   <span className="truncate font-medium">{row.displayName}</span>
                   <CategoryTag slug={row.category.slug} name={row.category.name} className="hidden sm:inline-flex" />
+                  {isHot ? (
+                    <span
+                      title="Raised recently"
+                      className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-orange-500"
+                    >
+                      <Flame className="h-2.5 w-2.5" strokeWidth={2.5} />
+                      hot
+                    </span>
+                  ) : null}
                 </span>
                 {row.description ? <span className="block truncate text-sm text-muted">{row.description}</span> : null}
                 <span className="flex items-center gap-1 text-xs text-muted">
