@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Bell, CalendarDays, Info, LayoutGrid, ScrollText, TrendingUp } from "lucide-react";
 import { DarkModeToggle } from "./DarkModeToggle";
-import { getLiveActivityPulse } from "@/lib/ranking";
+import { getVisitorStats } from "@/lib/datafast";
 import { formatCount } from "@/lib/format";
 
 const NAV_LINKS = [
@@ -14,7 +14,7 @@ const NAV_LINKS = [
 ];
 
 export async function Header() {
-  const pulse = await getLiveActivityPulse();
+  const stats = await getVisitorStats();
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur">
@@ -23,13 +23,13 @@ export async function Header() {
           <Link href="/" className="font-mono text-lg font-bold tracking-tight">
             Who&apos;s <span className="text-accent">#1</span>
           </Link>
-          {pulse.clicksLast24h > 0 ? (
+          {stats ? (
             <span className="hidden items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-xs text-muted sm:flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
               </span>
-              {formatCount(pulse.clicksLast24h)} clicks · {formatCount(pulse.paymentsLast24h)} raises today
+              {formatCount(stats.onlineNow)} online · {formatCount(stats.totalVisitors)} visitors
             </span>
           ) : null}
         </div>

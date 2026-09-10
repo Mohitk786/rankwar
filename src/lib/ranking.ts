@@ -220,15 +220,6 @@ export async function getLatestActivity(limit = 8) {
   );
 }
 
-export async function getLiveActivityPulse() {
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const [clicksLast24h, paymentsLast24h] = await Promise.all([
-    db.click.count({ where: { isCounted: true, createdAt: { gte: since } } }),
-    db.bid.count({ where: { createdAt: { gte: since } } }),
-  ]);
-  return { clicksLast24h, paymentsLast24h };
-}
-
 /** Recent "you got overtaken" events for a single listing — the raw feed behind the product-page activity log and the watchlist API. */
 export async function getRankEvents(listingId: string, limit = 5) {
   return db.rankEvent.findMany({
