@@ -1,6 +1,6 @@
 import { db } from "./db";
 
-export const MIN_NEW_LISTING_AMOUNT = 5;
+export const MIN_NEW_LISTING_AMOUNT = 1;
 export const MIN_RAISE_INCREMENT = 1;
 export const TAKE_FIRST_PLACE_MARGIN = 5;
 export const MAX_AMOUNT = 999_999;
