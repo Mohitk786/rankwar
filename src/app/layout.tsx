@@ -33,9 +33,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           strategy="afterInteractive"
         /> */}
 
-         <Script defer data-website-id="nha8a43tymz8" src="https://data.whos1.bid/script.js" />
+         {/* <Script defer data-website-id="nha8a43tymz8" src="https://data.whos1.bid/script.js"> */}
 
-       
+         
+
+        <script defer data-website-id="nha8a43tymz8" src="https://YOUR_DOMAIN/script.js"></script>
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
