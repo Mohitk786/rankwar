@@ -26,12 +26,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <Script
+        {/* <Script
           data-website-id="dfid_vuwI6uv1xQpbpDOd6TkmL"
           data-domain="www.whos1.bid"
           src="https://datafa.st/js/script.js"
           strategy="afterInteractive"
-        />
+        /> */}
+
+         <Script defer data-website-id="nha8a43tymz8" src="https://data.whos1.bid/script.js" />
+
+       
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
