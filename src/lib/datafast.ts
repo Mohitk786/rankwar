@@ -1,4 +1,4 @@
-const DATAFAST_BASE_URL = "https://datafa.st/api/v1";
+const DATAFAST_BASE_URL = "https://data.whos1.bid/api/v1";
 
 async function datafastFetch<T>(path: string, params: Record<string, string>, revalidateSeconds: number): Promise<T | null> {
   const apiKey = process.env.DATAFAST_API_KEY;
