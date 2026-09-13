@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
          
 
-        <script defer data-website-id="nha8a43tymz8" src="https://data.whos1.bid/script.js"></script>
+        <script defer data-website-id="nha8a43tymz8"  data-domain="whos1.bid" src="https://data.whos1.bid/script.js"></script>
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
