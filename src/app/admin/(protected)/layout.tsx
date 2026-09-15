@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { destroyAdminSession, isAdminAuthenticated } from "@/lib/admin-auth";
+import { Button } from "@/components/ui/button";
+import { PageShell } from "@/components/PageShell";
 
 async function logoutAction() {
   "use server";
@@ -14,21 +16,21 @@ export default async function AdminProtectedLayout({ children }: LayoutProps<"/a
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
+    <PageShell>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-mono text-xl font-bold">Admin</h1>
+        <h1 className="font-serif text-xl font-semibold tracking-tight">Admin</h1>
         <form action={logoutAction}>
-          <button type="submit" className="rounded-md border border-border px-3 py-1.5 text-sm hover:border-foreground/40">
+          <Button type="submit" variant="outline">
             Log out
-          </button>
+          </Button>
         </form>
       </div>
       {children}
-      <p className="mt-8 text-xs text-muted">
+      <p className="mt-8 text-xs text-muted-foreground">
         <Link href="/" className="underline">
           Back to site
         </Link>
       </p>
-    </div>
+    </PageShell>
   );
 }

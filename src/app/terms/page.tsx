@@ -1,3 +1,5 @@
+import { DocumentPage } from "@/components/PageShell";
+
 export const metadata = { title: "Terms of Service" };
 
 const SECTIONS: { heading: string; body: string[] }[] = [
@@ -61,21 +63,10 @@ const SECTIONS: { heading: string; body: string[] }[] = [
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-2 font-mono text-2xl font-bold">Terms of Service</h1>
-      <p className="mb-6 text-xs text-muted">Last updated: draft — replace with your reviewed terms before accepting real payments.</p>
-      <div className="space-y-6">
-        {SECTIONS.map((section) => (
-          <section key={section.heading}>
-            <h2 className="mb-2 font-semibold">{section.heading}</h2>
-            <div className="space-y-2 text-sm text-muted">
-              {section.body.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-    </div>
+    <DocumentPage
+      title="Terms of Service"
+      intro="Last updated: draft — replace with your reviewed terms before accepting real payments."
+      sections={SECTIONS}
+    />
   );
 }

@@ -4,6 +4,8 @@ import { formatCount, formatRelativeTime, formatUsd, minutesAgo } from "@/lib/fo
 import { AdminListingRow } from "@/components/admin/AdminListingRow";
 import { AdminReconcileButton } from "@/components/admin/AdminReconcileButton";
 import { AdminResolveFlagButton } from "@/components/admin/AdminResolveFlagButton";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata = { title: "Admin dashboard" };
 
@@ -52,7 +54,7 @@ export default async function AdminDashboardPage({
       {(stuckCheckouts.length > 0 || stuckEvents.length > 0) && (
         <section>
           <h2 className="mb-3 font-semibold">Payment reconciliation</h2>
-          <p className="mb-3 text-xs text-muted">
+          <p className="mb-3 text-xs text-muted-foreground">
             Checkouts that expired without a confirmed webhook, and events that received but never finished
             processing — click through to re-check directly against Dodo Payments.
           </p>
@@ -60,7 +62,7 @@ export default async function AdminDashboardPage({
             <div className="mb-4 overflow-x-auto scrollbar-thin rounded-lg border border-border">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-surface text-left text-xs text-muted">
+                  <tr className="bg-card text-left text-xs text-muted-foreground">
                     <th className="px-3 py-2">Listing</th>
                     <th className="px-3 py-2">Delta</th>
                     <th className="px-3 py-2">Created</th>
@@ -73,7 +75,7 @@ export default async function AdminDashboardPage({
                     <tr key={c.id} className="border-t border-border">
                       <td className="px-3 py-2">{c.targetDisplayName}</td>
                       <td className="px-3 py-2 font-mono">{formatUsd(c.deltaAmount)}</td>
-                      <td className="px-3 py-2 text-xs text-muted">{formatRelativeTime(c.createdAt)}</td>
+                      <td className="px-3 py-2 text-xs text-muted-foreground">{formatRelativeTime(c.createdAt)}</td>
                       <td className="px-3 py-2 text-xs">{c.status}</td>
                       <td className="px-3 py-2">
                         <AdminReconcileButton checkoutId={c.id} />
@@ -85,7 +87,7 @@ export default async function AdminDashboardPage({
             </div>
           ) : null}
           {stuckEvents.length > 0 ? (
-            <p className="text-xs text-danger">
+            <p className="text-xs text-destructive">
               {stuckEvents.length} webhook event(s) received but never finished processing — check server logs.
             </p>
           ) : null}
@@ -115,19 +117,19 @@ export default async function AdminDashboardPage({
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-semibold">Listings</h2>
           <form className="text-sm">
-            <input
+            <Input
               type="search"
               name="q"
               defaultValue={q ?? ""}
               placeholder="Search by name…"
-              className="rounded-md border border-border bg-background px-2 py-1 text-sm outline-none focus:border-accent"
+              className="h-8 w-56"
             />
           </form>
         </div>
         <div className="overflow-x-auto scrollbar-thin rounded-lg border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-surface text-left text-xs text-muted">
+              <tr className="bg-card text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2">Name</th>
                 <th className="px-3 py-2">Amount</th>
                 <th className="px-3 py-2">Category</th>
@@ -149,9 +151,11 @@ export default async function AdminDashboardPage({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border p-3">
-      <div className="font-mono text-lg font-bold tabular">{value}</div>
-      <div className="text-xs text-muted">{label}</div>
-    </div>
+    <Card className="gap-1 py-3">
+      <CardContent className="px-3">
+        <div className="font-mono text-lg font-bold tabular">{value}</div>
+        <div className="text-xs text-muted-foreground">{label}</div>
+      </CardContent>
+    </Card>
   );
 }

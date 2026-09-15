@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { getDailyBoard } from "@/lib/ranking";
+import { formatUtcDateLabel } from "@/lib/format";
 import { BoardTable } from "@/components/BoardTable";
+import { PageShell } from "@/components/PageShell";
 
 export async function generateMetadata({ params }: { params: Promise<{ date: string }> }) {
   const { date } = await params;
@@ -14,18 +16,15 @@ export default async function DailyDatePage({ params }: { params: Promise<{ date
   const rows = await getDailyBoard(date);
   if (rows.length === 0) notFound();
 
-  const label = new Date(`${date}T00:00:00.000Z`).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="mb-1 font-mono text-2xl font-bold">{label}</h1>
-      <p className="mb-6 text-sm text-muted">Frozen archive — this day&apos;s board no longer changes.</p>
+    <PageShell>
+      <h1 className="mb-1 font-serif text-2xl font-semibold tracking-tight">
+        {formatUtcDateLabel(date)}
+      </h1>
+      <p className="mb-6 text-sm text-muted-foreground">
+        Frozen archive — this day&apos;s board no longer changes.
+      </p>
       <BoardTable rows={rows} />
-    </div>
+    </PageShell>
   );
 }

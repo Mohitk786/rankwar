@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function AdminReconcileButton({ checkoutId }: { checkoutId: string }) {
   const router = useRouter();
@@ -24,14 +25,10 @@ export function AdminReconcileButton({ checkoutId }: { checkoutId: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <button
-        onClick={check}
-        disabled={pending}
-        className="rounded border border-border px-2 py-1 text-xs hover:border-foreground/40"
-      >
+      <Button type="button" variant="outline" size="xs" onClick={check} disabled={pending}>
         {pending ? "Checking…" : "Check with Dodo Payments"}
-      </button>
-      {message ? <span className="text-xs text-muted">{message}</span> : null}
+      </Button>
+      {message ? <span className="text-xs text-muted-foreground">{message}</span> : null}
     </div>
   );
 }

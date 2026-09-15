@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,25 +34,30 @@ export default function AdminLoginPage() {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-20">
-      <h1 className="mb-6 font-mono text-xl font-bold">Admin login</h1>
-      <form onSubmit={submit} className="space-y-4">
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          autoFocus
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-accent"
-        />
-        {error ? <p className="text-sm text-danger">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground disabled:opacity-50"
-        >
-          {submitting ? "Signing in…" : "Sign in"}
-        </button>
-      </form>
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-serif text-xl font-semibold tracking-tight">Admin login</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={submit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="admin-password">Password</Label>
+              <Input
+                id="admin-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                autoFocus
+              />
+            </div>
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            <Button type="submit" className="w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign in"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -7,6 +7,9 @@ import { CopyLinkButton } from "@/components/CopyLinkButton";
 import { CategoryTag } from "@/components/CategoryTag";
 import { WatchButton } from "@/components/WatchButton";
 import { RankActivityFeed } from "@/components/RankActivityFeed";
+import { ListingFavicon } from "@/components/ListingFavicon";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -18,7 +21,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${listing.displayName} · #${rank.overallRank} on Who's #1`,
     description: listing.description ?? `${listing.displayName} — #${rank.overallRank} overall on the Who's #1 leaderboard.`,
-    // opengraph-image.tsx (file convention, same route segment) supplies the share image.
   };
 }
 
@@ -54,60 +56,52 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <div
-        className={`mb-6 rounded-xl border p-5 ${isTopSpot ? "border-accent/50 bg-accent/5" : "border-border bg-surface"}`}
-      >
+      <Card className={`mb-6 gap-0 py-5 ${isTopSpot ? "border-primary/50 bg-primary/5" : ""}`}>
+        <CardContent className="px-5">
         <div className="flex items-start gap-4">
-          <span className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-background ring-1 ring-border">
-            {listing.faviconUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={listing.faviconUrl} alt="" width={56} height={56} className="h-full w-full object-contain" />
-            ) : null}
-          </span>
+          <ListingFavicon src={listing.faviconUrl} size={56} className="bg-background" />
           <div className="min-w-0 flex-1">
-            <h1 className="flex items-center gap-2 truncate font-mono text-2xl font-bold">
-              {isTopSpot ? <Trophy className="h-5 w-5 shrink-0 text-accent" strokeWidth={2.5} /> : null}
+            <h1 className="flex items-center gap-2 truncate font-serif text-2xl font-semibold tracking-tight">
+              {isTopSpot ? <Trophy className="h-5 w-5 shrink-0 text-primary" strokeWidth={2.5} /> : null}
               {listing.displayName}
             </h1>
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <CategoryTag slug={listing.category.slug} name={listing.category.name} />
               <span>{formatRelativeTime(listing.firstPaidAt)}</span>
             </div>
             {listing.description ? <p className="mt-2 text-sm">{listing.description}</p> : null}
           </div>
-          <span className="shrink-0 font-mono text-2xl font-bold text-accent">{formatUsd(listing.currentAmount)}</span>
+          <span className="shrink-0 font-mono text-2xl font-bold text-primary">{formatUsd(listing.currentAmount)}</span>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
-          <a
-            href={`/go/${listing.slug}`}
-            rel="sponsored nofollow"
-            className="flex items-center gap-1.5 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90"
-          >
-            Visit {listing.type === "X_HANDLE" ? "profile" : "site"}
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
+          <Button asChild>
+            <a href={`/go/${listing.slug}`} rel="sponsored nofollow">
+              Visit {listing.type === "X_HANDLE" ? "profile" : "site"}
+              <ArrowUpRight />
+            </a>
+          </Button>
           <CopyLinkButton url={shareUrl} />
-          <a
-            href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
-            className="flex items-center gap-1.5 rounded-md border border-accent/50 px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-accent/10"
-          >
-            <TrendingUp className="h-4 w-4" />
-            Raise your rank
-          </a>
+          <Button asChild variant="outline">
+            <a href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}>
+              <TrendingUp />
+              Raise your rank
+            </a>
+          </Button>
           <WatchButton slug={listing.slug} />
         </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <RankActivityFeed events={rankEvents} />
 
       <div className="mb-6 rounded-xl border border-border p-4">
-        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted">
+        <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           <TrendingUp className="h-3.5 w-3.5" /> What it costs to move up
         </h2>
         {ladder.isTop ? (
           <p className="flex items-center gap-2 text-sm">
-            <Trophy className="h-4 w-4 shrink-0 text-accent" />
+            <Trophy className="h-4 w-4 shrink-0 text-primary" />
             <span>
               <strong>{listing.displayName}</strong> is #1 overall right now — nothing to beat.
             </span>
@@ -119,7 +113,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 Beat <strong>{ladder.nextUp.name}</strong> for{" "}
                 <a
                   href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
-                  className="font-mono font-bold text-accent underline decoration-dotted underline-offset-2"
+                  className="font-mono font-bold text-primary underline decoration-dotted underline-offset-2"
                 >
                   {formatUsd(ladder.nextUp.priceToBeat)}
                 </a>
@@ -130,7 +124,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 Take #1 overall (<strong>{ladder.topOverall.name}</strong>) for{" "}
                 <a
                   href={`/?listing=${encodeURIComponent(raiseInput)}#claim-input`}
-                  className="font-mono font-bold text-accent underline decoration-dotted underline-offset-2"
+                  className="font-mono font-bold text-primary underline decoration-dotted underline-offset-2"
                 >
                   {formatUsd(ladder.topOverall.priceToBeat)}
                 </a>
@@ -148,12 +142,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">About this ranking</h2>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">About this ranking</h2>
         <div className="space-y-4">
           {faq.map((item) => (
             <div key={item.question}>
               <h3 className="font-medium">{item.question}</h3>
-              <p className="text-sm text-muted">{item.answer}</p>
+              <p className="text-sm text-muted-foreground">{item.answer}</p>
             </div>
           ))}
         </div>
@@ -173,9 +167,9 @@ function StatTile({
 }) {
   return (
     <div className="rounded-lg border border-border p-3">
-      <Icon className="mb-1.5 h-4 w-4 text-accent" strokeWidth={2.5} />
+      <Icon className="mb-1.5 h-4 w-4 text-primary" strokeWidth={2.5} />
       <div className="font-mono text-lg font-bold tabular">{value}</div>
-      <div className="text-xs text-muted">{label}</div>
+      <div className="text-xs text-muted-foreground">{label}</div>
     </div>
   );
 }

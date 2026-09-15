@@ -1,3 +1,5 @@
+import { PageShell } from "@/components/PageShell";
+
 export const metadata = { title: "FAQ" };
 
 const FAQ: { q: string; a: string }[] = [
@@ -37,16 +39,16 @@ const FAQ: { q: string; a: string }[] = [
 
 export default function FaqPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="mb-6 font-mono text-2xl font-bold">FAQ</h1>
+    <PageShell>
+      <h1 className="mb-6 font-serif text-2xl font-semibold tracking-tight">FAQ</h1>
       <div className="space-y-6">
         {FAQ.map((item) => (
           <div key={item.q}>
             <h2 className="mb-1 font-medium">{item.q}</h2>
-            <p className="text-sm text-muted">{item.a}</p>
+            <p className="text-sm text-muted-foreground">{item.a}</p>
           </div>
         ))}
       </div>
-    </div>
+    </PageShell>
   );
 }

@@ -16,6 +16,13 @@ async function attachClickCounts<T extends { id: string }>(rows: T[]): Promise<(
 
 const categorySelect = { select: { slug: true, name: true } } as const;
 
+export function getBoardCategories() {
+  return db.category.findMany({
+    orderBy: { sortOrder: "asc" },
+    select: { slug: true, name: true },
+  });
+}
+
 export async function getAllTimeBoard(opts: { categorySlug?: string; limit?: number } = {}) {
   const listings = await db.listing.findMany({
     where: {

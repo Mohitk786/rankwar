@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Trophy } from "lucide-react";
 import { formatUsd } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 type Status = "PENDING" | "SUCCEEDED" | "FAILED" | "EXPIRED" | "UNKNOWN" | "INITIATED";
 
@@ -62,64 +64,56 @@ export function SuccessStatus({ checkoutId }: { checkoutId: string }) {
     }
 
     return (
-      <div className="rounded-xl border border-accent/40 bg-accent/5 p-6">
-        {isTop ? (
-          <Trophy className="mx-auto mb-3 h-10 w-10 text-accent" strokeWidth={2} />
-        ) : (
-          <div className="mb-3 font-mono text-4xl font-black text-accent">#{win.overallRank}</div>
-        )}
-        <p className="mb-1 text-lg font-bold">{win.displayName}</p>
-        <p className="mb-4 text-sm text-muted">
-          #{win.overallRank} of {win.overallTotal} overall · #{win.categoryRank} of {win.categoryTotal} in{" "}
-          {win.categoryName}
-        </p>
-        <p className="mb-5 font-mono text-2xl font-bold text-accent">{formatUsd(win.amount)}</p>
+      <Card className="gap-0 border-primary/40 bg-primary/5 py-6">
+        <CardContent className="text-center">
+          {isTop ? (
+            <Trophy className="mx-auto mb-3 h-10 w-10 text-primary" strokeWidth={2} />
+          ) : (
+            <div className="mb-3 font-mono text-4xl font-black text-primary">#{win.overallRank}</div>
+          )}
+          <p className="mb-1 text-lg font-bold">{win.displayName}</p>
+          <p className="mb-4 text-sm text-muted-foreground">
+            #{win.overallRank} of {win.overallTotal} overall · #{win.categoryRank} of {win.categoryTotal} in{" "}
+            {win.categoryName}
+          </p>
+          <p className="mb-5 font-mono text-2xl font-bold text-primary">{formatUsd(win.amount)}</p>
 
-        <div className="mb-4 flex flex-wrap justify-center gap-2">
-          <a
-            href={tweetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background"
-          >
-            Share on X
-          </a>
-          <a
-            href={linkedinUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-md border border-border px-4 py-2 text-sm font-semibold hover:border-foreground/40"
-          >
-            Share on LinkedIn
-          </a>
-          <button
-            type="button"
-            onClick={copyResult}
-            className="rounded-md border border-border px-4 py-2 text-sm font-semibold hover:border-foreground/40"
-          >
-            {copied ? "Copied!" : "Copy result"}
-          </button>
-        </div>
+          <div className="mb-4 flex flex-wrap justify-center gap-2">
+            <Button asChild>
+              <a href={tweetUrl} target="_blank" rel="noopener noreferrer">
+                Share on X
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">
+                Share on LinkedIn
+              </a>
+            </Button>
+            <Button type="button" variant="outline" onClick={copyResult}>
+              {copied ? "Copied!" : "Copy result"}
+            </Button>
+          </div>
 
-        <a href={`/product/${win.listingSlug}`} className="text-sm text-muted underline">
-          View your listing
-        </a>
-      </div>
+          <a href={`/product/${win.listingSlug}`} className="text-sm text-muted-foreground underline">
+            View your listing
+          </a>
+        </CardContent>
+      </Card>
     );
   }
 
   if (status === "FAILED" || status === "EXPIRED") {
-    return <p className="text-danger">This checkout didn&apos;t complete. No charge was made — try again from the homepage.</p>;
+    return <p className="text-destructive">This checkout didn&apos;t complete. No charge was made — try again from the homepage.</p>;
   }
 
   if (attempts > 30) {
     return (
-      <p className="text-muted">
+      <p className="text-muted-foreground">
         Still confirming with Dodo Payments — this can occasionally take a minute. Refresh this page shortly, or check the
         board directly.
       </p>
     );
   }
 
-  return <p className="text-muted">Confirming your payment…</p>;
+  return <p className="text-muted-foreground">Confirming your payment…</p>;
 }

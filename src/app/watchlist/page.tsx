@@ -9,11 +9,11 @@ export const metadata = {
 export default function WatchlistPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-1 flex items-center gap-2 font-mono text-2xl font-bold">
-        <Bell className="h-5 w-5 text-accent" strokeWidth={2.5} />
+      <h1 className="mb-1 flex items-center gap-2 font-serif text-2xl font-semibold tracking-tight">
+        <Bell className="h-5 w-5 text-primary" strokeWidth={2.5} />
         Watchlist
       </h1>
-      <p className="mb-6 text-sm text-muted">
+      <p className="mb-6 text-sm text-muted-foreground">
         Listings you&apos;re watching, and whether anyone has passed them since you last checked.
       </p>
       <WatchlistClient />
