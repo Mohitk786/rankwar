@@ -14,12 +14,12 @@ export function RankActivityFeed({ events }: { events: RankEvent[] }) {
 
   return (
     <div className="mb-6 rounded-xl border border-border p-4">
-      <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         <AlertTriangle className="h-3.5 w-3.5" /> Recent rank activity
       </h2>
       <ul className="space-y-2 text-sm">
         {events.map((event) => (
-          <li key={event.id} className="flex items-baseline justify-between gap-3 text-muted">
+          <li key={event.id} className="flex items-baseline justify-between gap-3 text-muted-foreground">
             <span>
               Overtaken by <strong className="text-foreground">{event.overtakenByDisplayName}</strong>
               {event.scope === "CATEGORY" && event.categoryName ? ` in ${event.categoryName}` : " overall"}

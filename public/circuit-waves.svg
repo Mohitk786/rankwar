@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" fill="none">
+  <!-- horizontal waves, every 40px -->
+  <path d="M0 20 Q20 8 40 20 T80 20 T120 20 T160 20 T200 20 T240 20 T280 20 T320 20" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 60 Q20 48 40 60 T80 60 T120 60 T160 60 T200 60 T240 60 T280 60 T320 60" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 100 Q20 88 40 100 T80 100 T120 100 T160 100 T200 100 T240 100 T280 100 T320 100" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 140 Q20 128 40 140 T80 140 T120 140 T160 140 T200 140 T240 140 T280 140 T320 140" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 180 Q20 168 40 180 T80 180 T120 180 T160 180 T200 180 T240 180 T280 180 T320 180" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 220 Q20 208 40 220 T80 220 T120 220 T160 220 T200 220 T240 220 T280 220 T320 220" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 260 Q20 248 40 260 T80 260 T120 260 T160 260 T200 260 T240 260 T280 260 T320 260" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <path d="M0 300 Q20 288 40 300 T80 300 T120 300 T160 300 T200 300 T240 300 T280 300 T320 300" stroke="rgba(0,255,0,0.12)" stroke-width="1"/>
+  <!-- vertical waves, every 80px -->
+  <path d="M40 0 Q28 20 40 40 T40 80 T40 120 T40 160 T40 200 T40 240 T40 280 T40 320" stroke="rgba(0,255,0,0.08)" stroke-width="1"/>
+  <path d="M120 0 Q108 20 120 40 T120 80 T120 120 T120 160 T120 200 T120 240 T120 280 T120 320" stroke="rgba(0,255,0,0.08)" stroke-width="1"/>
+  <path d="M200 0 Q188 20 200 40 T200 80 T200 120 T200 160 T200 200 T200 240 T200 280 T200 320" stroke="rgba(0,255,0,0.08)" stroke-width="1"/>
+  <path d="M280 0 Q268 20 280 40 T280 80 T280 120 T280 160 T280 200 T280 240 T280 280 T280 320" stroke="rgba(0,255,0,0.08)" stroke-width="1"/>
+  <!-- diagonal waves -->
+  <g stroke="rgba(255,100,0,0.1)" stroke-width="1">
+    <path d="M-20 20 Q0 8 20 20 T60 20 T100 20 T140 20 T180 20 T220 20 T260 20 T300 20 T340 20" transform="rotate(45 160 160)"/>
+    <path d="M-20 180 Q0 168 20 180 T60 180 T100 180 T140 180 T180 180 T220 180 T260 180 T300 180 T340 180" transform="rotate(45 160 160)"/>
+  </g>
+</svg>

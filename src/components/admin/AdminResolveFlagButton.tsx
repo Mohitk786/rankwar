@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function AdminResolveFlagButton({ flagId }: { flagId: string }) {
   const router = useRouter();
@@ -15,8 +16,8 @@ export function AdminResolveFlagButton({ flagId }: { flagId: string }) {
   }
 
   return (
-    <button onClick={resolve} disabled={pending} className="text-xs text-accent hover:underline">
+    <Button type="button" variant="link" size="sm" onClick={resolve} disabled={pending} className="h-auto px-0">
       Mark resolved
-    </button>
+    </Button>
   );
 }

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AlertTriangle, Loader2, Trophy, X } from "lucide-react";
 import { formatRelativeTime, formatUsd } from "@/lib/format";
 import { getWatchlist, removeFromWatchlist } from "@/lib/watchlist-storage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 type WatchRow = {
   slug: string;
@@ -53,7 +55,7 @@ export function WatchlistClient() {
 
   if (slugs === null || loading) {
     return (
-      <div className="flex items-center gap-2 py-10 text-sm text-muted">
+      <div className="flex items-center gap-2 py-10 text-sm text-muted-foreground">
         <Loader2 className="h-4 w-4 animate-spin" /> Loading your watchlist…
       </div>
     );
@@ -61,7 +63,7 @@ export function WatchlistClient() {
 
   if (!rows || rows.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted">
+      <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
         You&apos;re not watching anything yet. Hit <strong>Watch</strong> on any product page to track its rank here —
         stored only in this browser, no account needed.
       </div>
@@ -71,15 +73,17 @@ export function WatchlistClient() {
   return (
     <ol className="space-y-3">
       {rows.map((row) => (
-        <li key={row.slug} className="rounded-xl border border-border bg-surface p-4">
+        <li key={row.slug}>
+          <Card className="gap-0 py-4">
+            <CardContent className="px-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <Link href={`/product/${row.slug}`} className="truncate font-medium hover:underline">
                 {row.displayName}
               </Link>
-              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                 {row.status !== "ACTIVE" ? (
-                  <span className="text-danger">No longer active</span>
+                  <span className="text-destructive">No longer active</span>
                 ) : (
                   <>
                     <span className="inline-flex items-center gap-1">
@@ -92,7 +96,7 @@ export function WatchlistClient() {
                 )}
               </div>
               {row.latestEvent ? (
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-danger">
+                <p className="mt-2 flex items-center gap-1.5 text-xs text-destructive">
                   <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                   Overtaken by {row.latestEvent.overtakenByDisplayName}
                   {row.latestEvent.scope === "CATEGORY" ? ` in ${row.categoryName}` : " overall"} ·{" "}
@@ -101,17 +105,20 @@ export function WatchlistClient() {
               ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-3">
-              <span className="font-mono text-lg font-bold tabular text-accent">{formatUsd(row.currentAmount)}</span>
-              <button
+              <span className="font-mono text-lg font-bold tabular text-primary">{formatUsd(row.currentAmount)}</span>
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-sm"
                 onClick={() => remove(row.slug)}
                 aria-label={`Stop watching ${row.displayName}`}
-                className="rounded-md p-1.5 text-muted transition-colors hover:bg-background hover:text-foreground"
               >
-                <X className="h-4 w-4" />
-              </button>
+                <X />
+              </Button>
             </div>
           </div>
+            </CardContent>
+          </Card>
         </li>
       ))}
     </ol>

@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, TrendingUp } from "lucide-react";
 import { formatRelativeTime, formatUsd } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import { LiveDot } from "@/components/LiveDot";
 
 export type ActivityItem = {
   id: string;
@@ -11,46 +13,59 @@ export type ActivityItem = {
   createdAt: Date;
 };
 
-export function LatestActivityTicker({ items }: { items: ActivityItem[] }) {
+export function LatestActivityTicker({
+  items,
+  className,
+}: {
+  items: ActivityItem[];
+  className?: string;
+}) {
   if (items.length === 0) return null;
 
   return (
-    <div className="mb-6">
-      <h2 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-        </span>
+    <div className={cn(className)}>
+      <h2 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        <LiveDot />
         Latest activity
       </h2>
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
-        {items.map((item) => (
-          <Link
-            key={item.id}
-            href={`/product/${item.listing.slug}`}
-            className="flex shrink-0 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 transition-colors hover:border-accent/50"
-          >
-            <span className="h-6 w-6 shrink-0 overflow-hidden rounded bg-background">
-              {item.listing.faviconUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.listing.faviconUrl} alt="" width={24} height={24} className="h-full w-full object-contain" />
-              ) : null}
-            </span>
-            <span className="min-w-0">
-              <span className="flex items-center gap-1 truncate text-sm font-medium">
-                {item.isNew ? (
-                  <Sparkles className="h-3 w-3 shrink-0 text-accent" />
-                ) : (
-                  <TrendingUp className="h-3 w-3 shrink-0 text-accent" />
-                )}
-                {item.listing.displayName}
+      <div className="relative">
+        <div className="flex gap-2 overflow-x-auto scrollbar-none">
+          {items.map((item) => (
+            <Link
+              key={item.id}
+              href={`/product/${item.listing.slug}`}
+              className="flex shrink-0 items-center gap-2.5 rounded-md bg-muted/80 px-5 py-2.5 transition-colors hover:bg-muted"
+            >
+              <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-sm bg-background ring-1 ring-foreground/6">
+                {item.listing.faviconUrl ? (
+                  <Image
+                    src={item.listing.faviconUrl}
+                    alt=""
+                    fill
+                    sizes="36px"
+                    unoptimized
+                    className="object-contain"
+                  />
+                ) : null}
               </span>
-              <span className="block text-xs text-muted">
-                at #{item.overallRank} · {formatUsd(item.amount)} · {formatRelativeTime(item.createdAt)}
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-semibold tracking-tight">
+                  {item.listing.displayName}
+                </span>
+                <span className="block text-xs leading-tight text-muted-foreground">
+                  #{item.overallRank} · {formatUsd(item.amount)}
+                </span>
+                <span className="mt-0.5 block text-xs leading-tight text-muted-foreground/70">
+                  {formatRelativeTime(item.createdAt)}
+                </span>
               </span>
-            </span>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-linear-to-l from-background to-transparent dark:from-black"
+        />
       </div>
     </div>
   );

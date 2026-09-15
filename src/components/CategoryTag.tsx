@@ -1,4 +1,4 @@
-import { getCategoryVisual, categoryTagStyle } from "@/lib/category-visuals";
+import { getCategoryVisual } from "@/lib/category-visuals";
 
 export function CategoryTag({
   slug,
@@ -17,8 +17,7 @@ export function CategoryTag({
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1 rounded-full font-medium ${padding} ${className}`}
-      style={categoryTagStyle(slug)}
+      className={`inline-flex shrink-0 items-center gap-1 rounded-full bg-card font-medium text-muted-foreground ring-1 ring-border ${padding} ${className}`}
     >
       <Icon className={iconSize} strokeWidth={2.5} />
       {name}

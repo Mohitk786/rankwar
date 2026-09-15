@@ -3,6 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { formatUsd } from "@/lib/format";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Listing = {
   id: string;
@@ -45,35 +53,43 @@ export function AdminListingRow({ listing, categories }: { listing: Listing; cat
       </td>
       <td className="py-2 pr-3 font-mono">{formatUsd(listing.currentAmount)}</td>
       <td className="py-2 pr-3">
-        <select
+        <Select
           value={listing.category.slug}
           disabled={pending}
-          onChange={(e) => patch({ categorySlug: e.target.value })}
-          className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+          onValueChange={(value) => patch({ categorySlug: value })}
         >
-          {categories.map((c) => (
-            <option key={c.slug} value={c.slug}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+          <SelectTrigger size="sm" className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((c) => (
+              <SelectItem key={c.slug} value={c.slug}>
+                {c.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </td>
       <td className="py-2 pr-3">
-        <select
+        <Select
           value={listing.status}
           disabled={pending}
-          onChange={(e) => patch({ status: e.target.value })}
-          className="rounded border border-border bg-background px-1 py-0.5 text-xs"
+          onValueChange={(value) => patch({ status: value })}
         >
-          <option value="ACTIVE">Active</option>
-          <option value="UNDER_REVIEW">Under review</option>
-          <option value="REMOVED">Removed</option>
-        </select>
+          <SelectTrigger size="sm" className="w-[140px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ACTIVE">Active</SelectItem>
+            <SelectItem value="UNDER_REVIEW">Under review</SelectItem>
+            <SelectItem value="REMOVED">Removed</SelectItem>
+          </SelectContent>
+        </Select>
       </td>
       <td className="py-2 text-right">
-        <button onClick={remove} disabled={pending} className="text-xs text-danger hover:underline">
+        <Button variant="link" size="sm" onClick={remove} disabled={pending} className="h-auto px-0 text-destructive">
           Remove
-        </button>
+        </Button>
       </td>
     </tr>
   );

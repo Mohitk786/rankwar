@@ -12,7 +12,15 @@ export function formatCount(count: number): string {
   return count.toLocaleString("en-US");
 }
 
-/** Wraps `Date.now()` behind a normal function call so it isn't flagged as an impure call inline in a Server Component's render body. */
+export function formatUtcDateLabel(dateStr: string) {
+  return new Date(`${dateStr}T00:00:00.000Z`).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 export function minutesAgo(minutes: number): Date {
   return new Date(Date.now() - minutes * 60_000);
 }

@@ -5,7 +5,6 @@ import { formatCount, formatUsd } from "@/lib/format";
 
 const FORMATTERS = { usd: formatUsd, count: formatCount } as const;
 
-/** Animates a number counting up from 0 to `value` on mount — the value itself is always real data from the server, this only animates its reveal. `variant` picks the formatter client-side since functions can't cross the server/client boundary as props. */
 export function CountUp({ value, variant, durationMs = 900 }: { value: number; variant: keyof typeof FORMATTERS; durationMs?: number }) {
   const [display, setDisplay] = useState(0);
   const hasAnimated = useRef(false);
@@ -16,7 +15,6 @@ export function CountUp({ value, variant, durationMs = 900 }: { value: number; v
     hasAnimated.current = true;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // One-time client-only preference check, not a subscription — skip the animation entirely.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplay(value);
       return;

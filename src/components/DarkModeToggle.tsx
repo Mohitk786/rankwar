@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function DarkModeToggle() {
   const [isDark, setIsDark] = useState<boolean | null>(null);
@@ -23,24 +24,28 @@ export function DarkModeToggle() {
     setIsDark(next);
   }
 
+  const dark = Boolean(isDark);
+
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={isDark ?? undefined}
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={toggle}
-      aria-label="Toggle dark mode"
-      aria-pressed={isDark ?? undefined}
-      className="relative inline-flex h-7 w-14 shrink-0 items-center rounded-full border border-border bg-background transition-colors"
+      className="relative h-7 w-12 shrink-0 cursor-pointer rounded-full bg-muted p-0.5"
     >
-      <span className="pointer-events-none absolute inset-0 flex items-center justify-between px-1.5">
-        <Sun className="h-3.5 w-3.5 text-muted" strokeWidth={2.5} />
-        <Moon className="h-3.5 w-3.5 text-muted" strokeWidth={2.5} />
-      </span>
       <span
-        className={`absolute left-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-sm transition-transform duration-200 ease-out ${
-          isDark === null ? "translate-x-0 opacity-0" : isDark ? "translate-x-7" : "translate-x-0"
-        }`}
+        className={cn(
+          "flex size-6 items-center justify-center rounded-full bg-background text-foreground transition-transform duration-200 ease-out",
+          dark ? "translate-x-5" : "translate-x-0",
+        )}
       >
-        {isDark ? <Moon className="h-3.5 w-3.5" strokeWidth={2.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={2.5} />}
+        {dark ? (
+          <Moon className="size-3.5" strokeWidth={2.5} />
+        ) : (
+          <Sun className="size-3.5" strokeWidth={2.5} />
+        )}
       </span>
     </button>
   );
