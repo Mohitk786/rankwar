@@ -50,7 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           defer
           data-website-id="nha8a43tymz8"
           data-domain="whos1.bid"
-          src="https://data.whos1.bid/script.js"
+          src="https://app.trfyx.com/script.js"
         ></script>
         <ThemeScript />
       </head>
